@@ -1,2 +1,2 @@
 # SME
-SME - structural mechanics and engineering
+SME - structural mechanics and elasticity

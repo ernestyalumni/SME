@@ -1,0 +1,1876 @@
+% file: SME.tex
+% Structural Mechanics and Elasticity
+% 
+% Fund Science! Help my physics education outreach and research! -Ernest Yeung
+% ernestyalumni.tilt.com 
+%
+% Facebook      : ernestyalumni 
+% github        : ernestyalumni
+% gmail         : ernestyalumni 
+% linkedin      : ernestyalumni 
+% twitter       : ernestyalumni 
+% wordpress.com : ernestyalumni
+% youtube       : ernestyalumni 
+% Tilt/Open     : ernestyalumni
+%
+% This code is open-source, governed by the Creative Common license.  Use of this code is governed by the Caltech Honor Code: ``No member of the Caltech community shall take unfair advantage of any other member of the Caltech community.'' 
+% 
+
+
+\documentclass[twoside,landscape,10pt]{amsart}
+
+%\setcounter{tocdepth}{1} % to get subsubsections in toc 
+% cf. http://www.latex-community.org/forum/viewtopic.php?f=47&p=44760
+
+
+\usepackage{amsmath,amssymb,latexsym}
+\usepackage{graphics}
+\usepackage{tikz}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue}
+
+\usetikzlibrary{matrix,arrows}
+
+%\usepackage[parfill]{parskip}
+
+\usepackage{multicol}
+\setlength\columnsep{20pt}
+
+%\usepackage{fontspec}
+%\setmainfont{Times New Roman} % this sets the real Times New Roman via modern TeX engines
+
+%\usepackage{mathptmx}
+
+\usepackage{listings}
+
+\lstset{language=Python, 
+        basicstyle=\rmfamily\small, 
+%        keywordstyle=\color{keywords},
+%        commentstyle=\color{comments},
+%        stringstyle=\color{red},
+        showstringspaces=false,
+%        identifierstyle=\color{green},
+%        procnamekeys={def,class}}
+}
+%\hoffset-
+
+\oddsidemargin=15pt
+\evensidemargin=5pt
+\hoffset-45pt
+\voffset-55pt
+\topmargin=-4pt
+\headsep=5pt
+\textwidth=1120pt
+\textheight=580pt
+\paperwidth=1200pt
+\paperheight=700pt
+\footskip=40pt
+
+\marginparsep=4pt
+\marginparwidth=8pt
+
+\parindent0.0em
+\parskip7pt plus3pt minus2pt
+
+%\linespread{1.2}
+
+%plain makes sure that we have page numbers
+\pagestyle{plain}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+%\newtheorem*{main}{Main Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{remark}
+\newtheorem*{notation}{Notation}
+
+%\numberwithin{equation}{section}
+
+%This defines a new command \questionhead which takes one argument and
+%prints out Question #. with some space.
+\newcommand{\questionhead}[1]
+  {\bigskip\bigskip
+   \noindent{\small\bf Question #1.}
+   \bigskip}
+
+\newcommand{\problemhead}[1]
+  {
+   \noindent{\small\bf Problem #1.}
+   }
+
+\newcommand{\exercisehead}[1]
+  { \smallskip
+   \noindent{\small\bf Exercise #1.}
+  }
+
+\newcommand{\solutionhead}[1]
+  {
+   \noindent{\small\bf Solution #1.}
+   }
+
+
+
+%-----------------------------------
+\begin{document}
+
+\lstset{language=Python} % Set your language (you can change the language for each code-block optionally)
+
+%-----------------------------------
+\title[Structural Mechanics and Elasticity]{Structural Mechanics and Elasticity}
+\author{Ernest Yeung}
+\address{}
+\email{ernestyalumni@gmail.com}
+\urladdr{http://ernestyalumni.wordpress.com}
+\thanks{linkedin : ernestyalumni }
+
+%I am on linkedin: ernestyalumni. 
+
+%I am crowdfunding on Tilt/Open and at Patreon to support basic sciences research: \url{ernestyalumni.tilt.com}.  
+
+%Tilt/Open is an open-source crowdfunding platform that is unique in that it offers open-source tools for building a crowdfunding campaign.  Tilt/Open has been used by Microsoft and Dick’s Sporting Goods to crowdfund their respective charity causes.
+
+\keywords{Structural Mechanics, Elasticity}
+\subjclass[Structural Mechanics]{Structural Mechanics}
+\date{21 juillet 2015}
+\begin{abstract}
+Everything about Structural Mechanics and Elasticity
+\end{abstract}
+
+\maketitle
+
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+
+\begin{multicols*}{2}
+
+\section{Strain tensor} I was following Chapter 1, Fundamental Equations, and Sec. 1 The strain tensor of Landau and Lifshitz \cite{LLandauELifshitz1970}.  But I will raise a number of issues with the derivation of the strain tensor.  
+
+Consider a diffeomorphism $\Phi$ on manifold $M$, representing space, to manifold $N$.  I will allow for the targe manifold to be $N$ for generality, but I suspect that $N=M$, i.e. $\Phi$ should map back to $M$.  As $\Phi$ is a diffeomorphism on $M$, then necessarily the dimension of $M$, $\text{dim}M$, and the dimension of $N$, $\text{dim}N$, must be equal, i.e. $\text{dim}M = \text{dim}N$.  
+
+Let $B$ be a compact submanifold of $M$, $B\subset M$ s.t. $\text{dim}B = \text{dim}M$.  
+
+So 
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=1.1em, column sep=4.8em, minimum width=2.2em]
+  {
+M & N  \\
+B & \Phi(B) \\
+};
+  \path[->]
+  (m-1-1) edge node [above] {$\Phi$} (m-1-2)
+  (m-2-1) edge node [auto]  {$\Phi$} (m-2-2)
+  ;
+\end{tikzpicture}  
+
+Let $a$ be a point in $B$, $a\in B$, and let $a$ be represented by the same notation for its coordinate representation.  Let the coordinate representation of $\Phi(a)$ be $x$ for its notation.  Then
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=1.1em, column sep=4.8em, minimum width=2.2em]
+  {
+a & x=x(a) = \Phi(a)  \\
+};
+  \path[|->]
+  (m-1-1) edge node [above] {$\Phi$} (m-1-2)
+  ;
+\end{tikzpicture}  
+
+$\Phi \in \text{Diff}(M)$, i.e. $\Phi$ is a diffeomorphism in the group of diffeomorphisms on $M$.  \\
+Let $\Phi_t:= \Phi(t)$ i.e. diffeomorphism $\Phi$ is parametrized by $t\in \mathbb{R}$, so that \\
+\phantom{Let } $\Phi_0 = 1\cdot a = a$ and \\
+\phantom{Let } $\Phi_t(a) = x(a,t)$
+
+
+Consider
+\[
+U(a,t) := \frac{ \partial x(a,t)}{ \partial t} = \frac{ \partial }{ \partial t} \Phi_t(a)
+\]
+where $U(a,t)$ is the Lagrangian or material velocity $U$, which is the velocity of the particle with label $a$ at time $t$.  
+
+EY : 20150723 I think this velocity $U(a,t)$ is in $T_aM$, i.e. $U(a,t) \in T_aM$; please correct me if I'm wrong.
+
+Now consider the metric $g \in \Gamma(T^*M \otimes T^*M)$, a $(0,2)$-rank symmetric tensor, so \\
+$g \in \Gamma(T^*M \otimes T^*M) $ \\
+$g= g_{ij}da^i \otimes da^j$ 
+
+Consider the metric $g' \in \Gamma(T^*N \otimes T^*N)$, a $(0,2)$-rank symmetric tensor on $N$:\\
+$g' \in \Gamma(T^*N \otimes T^*N)$ \\
+$g' = g_{ij}'dx^i \otimes dx^j$
+
+We want to consider the pullback $\Phi^*$ of $g'$, so that $\Phi^*g' \in \Gamma(T^*M \otimes T^*M)$, i.e.
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=3.8em, column sep=4.8em, minimum width=2.2em]
+  {
+T^*M \otimes T^*M & T^*N \otimes T^*N  \\
+M & N \\
+};
+  \path[->]
+  (m-1-2) edge node [above] {$\Phi^*$} (m-1-1)
+  (m-2-1) edge node [auto]  {$\Phi$} (m-2-2)
+  edge node [auto] {} (m-1-1)
+  (m-2-2) edge node [auto] {} (m-1-2)
+  ;
+\end{tikzpicture}  \quad \quad \, \begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=3.8em, column sep=4.8em, minimum width=2.2em]
+  {
+\Phi^*g'  & g' \\
+a & x= \Phi(a) \\
+};
+  \path[|->]
+  (m-1-2) edge node [above] {$\Phi^*$} (m-1-1)
+  (m-2-1) edge node [auto]  {$\Phi$} (m-2-2)
+  edge node [auto] {} (m-1-1)
+  (m-2-2) edge node [auto] {} (m-1-2)
+  ;
+\end{tikzpicture}  
+
+For $U,V \in \Gamma(TM)$, 
+\[
+\Phi^*g'(U,V) = g'_{ij\,\,\Phi(a)} d\Phi_a(U) \otimes d\Phi_a(V) = g'_{ij} \frac{ \partial x^i}{ \partial x^k} \frac{ \partial x^j}{ \partial a^l} U^k V^l
+\]
+as $d\Phi = \frac{ \partial x^i}{ \partial a^j} da^j$ and so (with $U = U^j \frac{ \partial }{ \partial a^j}$) \\
+\phantom{as }$d\Phi(U) = \frac{ \partial x^i}{ \partial a^j} U^j$.  
+
+So then 
+\[
+(\Phi^* g' - g)(U,V) = \left( g'_{ij} \frac{ \partial x^i}{ \partial a^k} \frac{ \partial x^j}{ \partial a^l} - g_{kl}  \right) U^k V^l := 2 E_{kl} U^k V^l
+\]
+where
+\begin{equation}
+  E_{kl} = \frac{1}{2} (g'_{ij} \frac{ \partial x^i}{ \partial a^k} \frac{ \partial x^j}{ \partial a^l } - g_{kl } )
+\end{equation}
+is the \textbf{Lagrangian strain-tensor}, $E$, or Green-St. Vencent strain tensor, a $(0,2)$-rank symmetric tensor.  Note that 
+\begin{equation}
+  E = \frac{1}{2} ( \Phi^*g' - g ) \in \Gamma(T^*M\otimes T^*M)
+\end{equation}
+
+Suppose we define $u^i = x^i-a^i$.  It's very unclear how the frame field $\lbrace e_i \rbrace$ for $TM$ at point $a\in TM$, an orthonormal basis, can be related in such a way to the frame field for $TN$ at point $x = \Phi(a) \in TN$, to be completely ``inline'' with each other (i.e. $e_i = \Phi(e_i)$), in general.  Nevertheless, just suppose this is the case.  
+
+Then substitute $u^i +a^i$ for $x^i$ into the Lagrangian strain-tensor $E_{kl}$:
+\[
+\begin{gathered}
+  E_{kl} = \frac{1}{2} \left[ g'_{ij} \left( \frac{ \partial u^i}{ \partial a^k} + \delta^i_k  \right) \left( \frac{ \partial u^j}{ \partial a^l } + \delta^j_l \right) - g_{kl } \right] = \frac{1}{2} \left[ g'_{ij} \left( \frac{ \partial u^i }{ \partial a^k } \frac{ \partial u^j}{ \partial a^l} + \frac{ \partial u^i }{ \partial a^k} \delta^j_l + \frac{ \partial u^j}{ \partial a^l} \delta^i_k \right) - g_{kl} \right] = \\ 
+  = \frac{1}{2} \left[ g'_{ij} \left(\frac{ \partial u^i }{ \partial a^k} \frac{ \partial u^j }{ \partial a^l } \right) + \frac{ \partial u_l }{ \partial a^k} + \frac{ \partial u_k}{ \partial a^l} - g_{kl} \right] = \frac{1}{2} \left[ \frac{ \partial u_l }{ \partial a^k} + \frac{ \partial u_k }{ \partial a^l} + \frac{ \partial u_j}{ \partial a^k} \frac{ \partial u^j}{ \partial a^l} - g_{kl} \right]
+\end{gathered}
+\]
+
+Let $u \in \Gamma(T^*M \otimes T^*M)$ be the \textbf{strain tensor} of rank $(0,2)$ s.t.
+\begin{equation}
+  u_{kl} = \frac{1}{2} \left[ \frac{ \partial u_l}{ \partial a^k} + \frac{ \partial u_k}{ \partial a^l} + \frac{ \partial u_j}{ \partial a^k} \frac{ \partial u^j}{ \partial a^l } \right]
+\end{equation}
+for $a= a^i \in M$.  
+
+This derivation of the strain tensor is essentially what Landau and Lifshitz is saying in Chapter 1, Sec. 1 of Landau and Lifshitz \cite{LLandauELifshitz1970}.
+
+However, from an entirely different perspective, consider the Lie derivative of the metric $g \in \Gamma(T^*M\otimes T^*M)$.  Note that the Lie derivative of the metric $g$ should give us back an object that is also a $(0,2)$-rank symmetric tensor, just like $g$.  
+
+For a vector field $u \in \mathfrak{X}(M)$ on $M$, with $g = g_{ij} da^i \otimes da^j$, then
+\[
+\begin{gathered}
+  \mathcal{L}_u g = (\mathcal{L}_u g_{ij}) da^i \otimes da^j + g_{ij} \mathcal{L}_u da^i \otimes da^j + g_{ij} da^i \otimes \mathcal{L}_u da^j
+\end{gathered}
+\]
+Now
+\[
+\begin{gathered}
+  \mathcal{L}_u da^i = i_u d(da^i) + di_u da^i = 0 + \frac{ \partial u^i }{ \partial a^j} da^j
+\end{gathered}
+\]
+and, for $u = u^i \frac{ \partial }{ \partial a^i}$
+\[
+\mathcal{L}_u g_{ij} = u^k \frac{  \partial g_{ij}}{ \partial a^k}
+\]
+so that 
+\[
+\begin{gathered}
+  \mathcal{L}_u g = g_{ij} \frac{ \partial u^i}{ \partial a^k} da^k \otimes da^j + g_{ij} da^i \otimes \frac{ \partial u^j}{ \partial a^k} da^k + u^k \frac{ \partial g_{ij}}{ \partial a^k} da^i \otimes da^j =  \frac{ \partial u_j }{ \partial a^k} da^k \otimes da^j + \frac{ \partial u_i }{ \partial a^k} da^i \otimes da^k + u^k \frac{ \partial g_{ij} }{ \partial a^k} da^i \otimes da^j   = \\
+  =\left(  \frac{ \partial u_j }{ \partial a^i} + \frac{ \partial u_i}{ \partial a^j} + u^k \frac{ \partial g_{ij}}{ \partial a^k} \right) da^i \otimes da^j
+\end{gathered}
+\]
+So the correct formula for the Lie derivative of the metric $g$ is 
+\[
+  \mathcal{L}_ug = \left(  \frac{ \partial u_i}{ \partial a^j} + \frac{ \partial u_j }{ \partial a^i} +  u^k \frac{ \partial g_{ij}}{ \partial a^k} \right) da^i \otimes da^j 
+\]
+Carroll (2001) and Fitzmaurice (2011) have it wrong \footnote{Sean Caroll, Lecture Notes on General Relativity, March 2001, \url{http://ned.ipac.caltech.edu/level5/March01/Carroll3/Carroll5.html}; Fionn Fitzmaurice, ``Differential Geometry'', 2011, \url{https://www.maths.tcd.ie/~fionnf/dg/dg.pdf}}.  This stackexchange question and Harmark (2008) have it right \footnote{``Confusion about Lie derivative on metric'', \emph{physics.stackexchange.com}, \url{http://physics.stackexchange.com/questions/112357/confusion-about-lie-derivative-on-metric}; T. Harmark, ``Notes on Lie derivatives and Killing vector fields,'' 2008 \url{http://www.nbi.dk/~harmark/Killingvectors.pdf}}.  
+
+EY: 20150724 I'm not sure if I can be so causal with raising and lowering indices, since it obfuscates when the metric $g$ is dependent upon coordinate $a$ or not.  Then what can be agreed upon is this:
+\begin{equation}\label{Eq:strain00}
+  \mathcal{L}_u g= \left( g_{kj} \frac{ \partial u^k}{ \partial a^i } + g_{ik} \frac{ \partial u^k}{ \partial a^j} + u^k \frac{ \partial g_{ij} }{ \partial a^k } \right) da^i \otimes da^j
+\end{equation}
+Then define the \textbf{strain tensor} is such:
+\begin{definition}\label{Def:straintensor}
+  The \textbf{strain tensor} $u$, $u \in \Gamma(T^*M\otimes T^*M)$, a symmetric $(0,2)$-rank tensor is given by
+\begin{equation}
+u = u_{ij} da^i \otimes da^j = \frac{1}{2} \left( g_{kj} \frac{ \partial u^k}{ \partial a^i } + g_{ik} \frac{ \partial u^k}{ \partial a^j} + u^k \frac{ \partial g_{ij} }{ \partial a^k } \right) da^i \otimes da^j
+\end{equation}
+\end{definition}
+
+
+\section{Stress}
+
+Given the Cauchy stress tensor $T$, $T$ being a $(0,2)$-rank symmetric tensor, $T = T^{ij} e_i \otimes e_j$, with $\lbrace e_i \rbrace_{i = 1 \dots \text{dim}M}$ being an orthonormal frame field on tangent bundle $TM$, and so consider this set of transformations:
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=1.1em, column sep=4.8em, minimum width=1.1em]
+  {
+T^*M \otimes T^*M  & \Omega^1(M,TM)  &  \Omega^{n-1}(M,TM)   \\ 
+T= T^{ij}e_i \otimes e_j = T^{ij}e_j\otimes e_i & T^i_{\,\,j}e^j \otimes e_i & T^{ij}dS_j \otimes e_i \\
+};
+  \path[->]
+  (m-1-1) edge node [above] {$(\flat,-)$} (m-1-2)
+  (m-1-2) edge node [auto]  {$(*,-)$} (m-1-3)
+  ;
+  \path[|->]
+  (m-2-1) edge node [above] {$(\flat,-)$} (m-2-2)
+  (m-2-2) edge node [above] {$(*,-)$} (m-2-3) ; 
+\end{tikzpicture}  
+with 
+\[
+\begin{gathered}
+  T^i_{\,\,j}\frac{ \sqrt{g}}{ (n-1)!} \epsilon^j_{\,\,i_2 \dots i_n} dx^{i_2} \wedge \dots \wedge dx^{i_n} \otimes e_i = T^i_{\,\,j} g^{jk}dS_k \otimes e_i = T^{ij} dS_j \otimes e_i
+\end{gathered}
+\]
+EY : 20150724 I have a serious concern about the last step, namely in how the Levi-Civita permutation symbol transforms in the musical isomorphism.  Can we really raise and lower indices with impunity, and in the (2) cases of coordinate bases and an orthonormal frame field? How does the Levi-Civita permutation symbol transform?  
+
+Define $dS_k$ as such:
+\begin{proposition}
+  $dS_j \in \Omega^{n-1}(M)$ 
+\begin{equation}
+  \begin{gathered}
+    dS_j = i_{e_j}\text{vol}^n \\ 
+    i_{e_j}\text{vol}^n = \frac{\sqrt{g}}{ (n-1)!} \epsilon_{ji_2 \dots i_n} dx^{i_2} \wedge \dots \wedge dx^{i_n}
+\end{gathered}
+\end{equation}
+\end{proposition}
+\begin{proof}
+  \[
+\begin{gathered}
+  i_{e_j}\text{vol}^n = \frac{\sqrt{g}}{n!}\epsilon_{i_1 \dots i_n}(\delta^{i_1}_j dx^{i_2} \wedge \dots \wedge dx^{i_n} + (-1) dx^{i_1} \delta^{i_2}_j \wedge dx^{i_3} \wedge \dots \wedge dx^{i_n} + \dots + (-1)^{n+1} dx^{i_1} \wedge \dots \wedge dx^{i_{n-1}} \delta^{i_n}_j ) = \\
+  = \frac{\sqrt{g}}{(n-1)!} \epsilon_{ji_2 \dots i_n} dx^{i_2} \wedge \dots \wedge dx^{i_n}
+\end{gathered}
+\]
+\end{proof}
+
+Nevertheless, $T^{ij}dS_j$ could be interpreted as the force, in the direction $i$, on a surface element $dS_j$ normal to direction $j$.  
+
+Now the Cauchy stress tensor acts on the surface, or surface boundary of compact body $B$, $\partial B$, and so the total force due to the Cauchy stress tensor on the surface of the body $B$, $\partial B$, is 
+\[
+\int_{\partial B} T^{ij} dS_j \otimes e_i
+\]
+with $T^{ij} dS_j \otimes e_i \in \Omega^{n-1}(M,TM)$.  
+
+Now, the question I have is whether Stoke's law could be used or not to change the integral above, because we're not necessarily integrating over a $n-1$-form, but a vector-valued $n-1$ form, and the connection has to be taken into account.  
+
+
+Consider the \emph{covariant exterior differential}, $D$, which takes into account of a connection form (the usual exterior differential, or differential, $d$ on $C^{\infty}(M)$, $df$, $f\in C^{\infty}(M)$, say, doesn't involve the presence of the connection) \footnote{``Exterior covariant derivative'', \emph{wikipedia}, \url{https://en.wikipedia.org/wiki/Exterior_covariant_derivative}}. 
+\[
+D: \Omega^{n-1}(M;E) \to \Omega^n(M;E)
+\]
+with definition of $D$ taken out of Morita (2001) (Sec.5.3. Connections in Vector Bundles and Curvature \cite{SMorita2001}).  Morita has $D$ defined as 
+\[
+\begin{aligned}
+  & D: \Omega^k(M;E) \to \Omega^{k+1}(M;E) \\ 
+  & D(\theta \otimes s) = d\theta \otimes s + (-1)^k \theta \wedge \nabla s \quad \quad \quad \, \begin{aligned}
+    & \theta \in \Omega^k(M) \\
+    & s \in \Gamma(E) \end{aligned}
+\end{aligned}
+\]  
+
+With
+\[
+\begin{aligned}
+  & \nabla : \Gamma(E) \to \Omega^1(M;E) \\ 
+  & e^i \in \Omega^1(M) \\ 
+  & e_i \in \Gamma(E) 
+\end{aligned}
+\]
+%\[
+%D(e^i \otimes e_i) = de^i \otimes e_i + (-1)^1 e^j \wedge \nabla e_j 
+%\]
+Now $\nabla e_j = \omega^i_{ \,\, j} \otimes e_i$, where $\omega^i_{\,\,j} \in \Omega^1(M)$ is a \emph{connection} 1-form, s.t. $\omega^i_{\,\,j} = \Gamma^i_{jk} e^k$, where $\Gamma^i_{jk}$ are Christoffel symbols.  
+
+Then applying $D$ onto $T^{ij}dS_j \otimes e_i$,
+%\[
+%de^i \otimes e_i + (-1) e^j \wedge \omega^i_{\,\,j} \otimes e_i = (de^i + \omega^i_{\,\,j}\wedge e^j) \otimes e_i
+%\]
+\[
+\begin{gathered}
+  D(T^{ij}dS_j\otimes e_i) = d(T^{ij}dS_j)\otimes e_i +(-1)^{n-1} T^{ij} dS_j \wedge \nabla e_i = \frac{ \partial T^{ij}}{ \partial x^j} \text{vol}^n \otimes e_i + (-1)^{n-1} T^{kj} dS_j \wedge \omega^i_{\,\,k} \otimes e_i =  \\
+\frac{ \partial T^{ij}}{ \partial x^j} \text{vol}^n \otimes e_i + T^{kj} \omega^i_{\,\,k} \wedge dS_j \otimes e_i = \\
+= \left( \frac{ \partial T^{ij}}{ \partial x^j} \text{vol}^n + \omega^i_{\,\,k} \wedge T^{kj}dS_j \right) \otimes e_i = \nabla (T^{ij} dS_j) \otimes e_i
+\end{gathered}
+\]
+where $\nabla : \Omega^{n-1}(M) \to \omega^n(M)$ acts on $(n-1)$-forms as such.  
+
+Consider $\omega^i_{\,\,j} = \Gamma^i_{jk} e^k$.  Then
+\[
+\begin{gathered}
+  \omega^i_{\,\,j} \wedge T^{jk}dS_k = \omega^i_{\,\,j} \wedge T^{jk}\frac{ \sqrt{g}}{(n-1)!} \epsilon_{ji_2 \dots i_n} dx^{i_2} \wedge \dots \wedge dx^{i_n} = \Gamma^i_{jk} e^k \wedge T^{jl} \frac{ \sqrt{g}}{(n-1)!} \epsilon_{li_2 \dots i_n} dx^{i_2} \wedge \dots \wedge dx^{i_n} = \\
+  = \Gamma^i_{jk} T^{jl} \frac{\sqrt{g}}{ (n-1)!} \epsilon_{li_2 \dots i_n} \epsilon^{ki_2 \dots i_n}_{j_1 j_2 \dots j_n} \frac{1}{n} dx^{j_1} \wedge \dots \wedge dx^{j_n} = \Gamma^i_{jk} T^{jl} \delta_l^k \text{vol}^n =\Gamma^i_{jk} T^{jk}\text{vol}^n
+\end{gathered}
+\]
+So then
+\begin{equation}\label{Eq:covariantderT}
+\nabla(T^{ij}dS_j) = \left( \frac{ \partial T^{ij}}{ \partial x^j} + \Gamma^i_{jk} T^{jk} \right)\text{vol}^n \in \Omega^n(M)
+\end{equation}
+
+
+At this point, in Appendix A ``Forms in Continuum Mechanics'', Sections A.a ``The Classical Cauchy Stress Tensor and Equations of Motion'' and A.b ``Stresses in Terms of Exterior Forms'' of Frankel (2004) \cite{TFrankel2004} is either very obfuscating or very erroneous.  The problem is this; there are 2 possibilities:
+\begin{equation}\label{Eq:Issuesurfacestress}
+\begin{gathered}
+  \int_{\partial B} T^{ij} dS_j \otimes e_i = \int_B d(T^{ij}dS_j)\otimes e_i  = \int_B \frac{ \partial T^{ij}}{ \partial x^j} \text{vol}^n \otimes e_i \text{ or } \\
+    \int_{\partial B} T^{ij} dS_j \otimes e_i = \int_B D(T^{ij}dS_j \otimes e_i) = \int_B \nabla(T^{ij}dS_j)\otimes e_i
+\end{gathered}
+\end{equation}
+The problem with the first possibility is the question of whether $e_i \Longleftrightarrow \frac{\partial}{\partial x^i}$ remains ``fixed'' or ``doesn't change'' as we move around $\partial B$ in the surface integral or $B$ in the volume integral.  
+
+The problem with the second possibility is, to my knowledge, I don't know if Stoke's law applies for vector-valued differential forms.  For differential forms on manifold $M$, the exterior derivative $d$ on differential forms is an antiderivative of degree $1$ (or $-1$, whatever your convention is), and $d^2=0$ leads to a deRham (co)homology.  I don't know if $D$, the covariant exterior derivative, an antiderivative of degree $1$, yields a cohomology.  
+
+\section{Equations of Motion}
+
+I'm going to follow the derivation in Frankel (2003; p.s. I need the 3rd. edition, please see the note at the very end) in Appendix A, Forms in Continuum Mechanics, Sec. A.a. The Classical Cauchy Stress Tensor and Equations of Motion, \cite{TFrankel2004}, because I want to point out some issues I want to raise.  
+
+Let $M$ be a smooth manifold equipped with a metric $g$, $(M,\mathcal{O},\mathcal{A},g)$ of space.  If one can consider a spacetime manifold $M$, please let me know.  Otherwise, assume a foliation by time $t\in \mathbb{R}$, so that we are considering $\mathbb{R}\times M$.  \\
+Let $b \in \mathfrak{X}(M)$. \\
+\phantom{Let} $b$ is the force per unit mass on the (compact) body $B\subset M$ s.t. $\text{dim}B = \text{dim}M$  \\
+Let $m:= \rho \text{vol}^n$, $\text{vol}^n$ a $n$-volume form on $M$, $\text{dim}M=n$, with $\rho \in C^{\infty}(M)$, $\rho$ the mass density.  So $m\in \Omega^n(M)$.  \\
+Let $b\otimes m \in \Omega^n(M,TM)$, a vector-valued $n$-form.  \\
+$\int_B b\otimes m$ is the total force on the compact body $B$ due to the external force $b$ acting directly on the body $B$.  \\
+The forces on the body $B$ due to the Cauchy stress tensor $T$, is on the surface or boundary of the body $B$, $\partial B$, given by $\int_{\partial B} T^{ij} dS_j$.   \\
+For diffeomorphism $\Phi : M \to N$, parametrize $\Phi$ by time $t\in \mathbb{R}$, so that $B(t) := \Phi_t B = \Phi(t)B$, and $\Phi_0 B = \Phi(0)B = B$.    
+
+$\int_{B(t)} m = \int_{B(t)} \rho \text{vol}^n$ is the total mass in the body $B(t)$ at time $t$.  
+
+\emph{Mass conservation} is 
+\begin{equation}
+  \frac{d}{dt} \int_{B(t)} m = \int_{B(t)} \mathcal{L}_{\frac{ \partial }{ \partial t} + u } m = 0 
+\end{equation}
+
+Consider $m \otimes u \in \Omega^n(M,TM)$.  Then $m\otimes u$ is the momentum for $\text{vol}^n$.  $P=P(t):= \int_{B(t)} m\otimes $ is the total momentum of body $B$.  
+
+Take the time derivative:
+\[
+\begin{gathered}
+  \dot{P} = \frac{d}{dt}P(t)= \frac{d}{dt} \int_{B(t)} m\otimes u = \int_{B(t)} \mathcal{L}_{ \frac{ \partial }{ \partial t} +u } m\otimes u = \int_{B(t)} (\mathcal{L}_{\frac{ \partial }{ \partial t} + u } m ) \otimes u + \int_{B(t)} m \otimes \mathcal{L}_{\frac{ \partial }{ \partial t} + u } u = \\
+  = 0 + \int_{B(t)} m \otimes \left( \frac{ \partial u^i}{ \partial t} + u^j \frac{ \partial }{ \partial x^j} u^i \right)\frac{ \partial }{ \partial x^i} = \int_{B(t)} m\otimes \left( \frac{ \partial u^i}{ \partial t} + u(u^i) \right) \frac{ \partial }{ \partial x^i}
+\end{gathered}
+\]
+For a proof of the step $\mathcal{L}_{ \frac{ \partial }{ \partial t} +u } v = \left( \frac{ \partial v^i}{\partial t} + u^j \frac{ \partial v^i }{ \partial x^j} \right)\frac{\partial }{ \partial x^i}  $, where $v\in \mathfrak{X}(\mathbb{R}\times M)$, i.e. $v$ is a \emph{time-dependent} vector field, and in this case, we have $v=u$, then see my Solutions to J. Lee's \textbf{Introduction to Smooth Manifolds}, where I present a proof that, to my knowledge, is original \cite{EYeung2012}.  I will recap it here:
+
+Let's define the Lie derivative:
+\begin{equation}
+\begin{gathered}
+  \mathcal{L}_{\widetilde{V}}W = (\mathcal{L}_{\widetilde{V}}W)_{(t,p)} = \left. \frac{d}{ds} \right|_{s=0}(d\widetilde{\theta}_{-s})_{\widetilde{\theta}_s(t,p)}(W_{\widetilde{\theta}_s(t,p)})   = \lim_{s\to 0} \frac{ (d\widetilde{\theta}_{-s})_{\widetilde{\theta}_s(t,p)}( W_{\widetilde{\theta}_s(t,p)}) - W_{\widetilde{\theta}_s(t,p)} }{s}
+\end{gathered}
+\end{equation}
+
+
+Use Case 1 of the proof of Lee's Theorem 9.38 \cite{JLee2012}, for showing $\mathcal{L}_VW = [V,W]$.  \\
+Let open neighborhood $U \subseteq J \times M$, with $(t,p) \in U$.  On open $U$, choose smooth coordinates $(t,u^i)$ on $U$.  By Theorem 9.22 of Lee \cite{JLee2012}, that at a regular point $p\in M$, $\exists \, (u^i)$ coordinates s.t. $V_p = \frac{ \partial }{ \partial u^1}$, then consider 
+
+\[
+\widetilde{V} = \frac{ \partial }{ \partial t} + \frac{ \partial }{ \partial u^1} \in \mathfrak{X}(\mathbb{R} \times M)
+\]
+with $V(t)(p) = \frac{ \partial }{ \partial u^1} \in \mathfrak{X}(M)$.  (Remember, $V(t)$ is a vector-field that is time-dependent, but is on $M$.  I will use this as a justification for using Thm. 9.22).  
+
+Now the flow $\widetilde{\theta}_s$ takes on these forms:
+\[
+\begin{gathered}
+  \widetilde{\theta}^{(t,p)}(s) = \widetilde{\theta}(s,(t,p)) = \widetilde{\theta}_s(t,p) = \\
+  = (\alpha(s,(t,p)) , \beta(s,(t,p))) = (s+t, \beta(s,(t,p)) )
+\end{gathered}
+\]
+Given these conditions, that \\
+$\beta(0,(t,p)) = p = (u^1,u^2, \dots u^n)$ and 
+\[
+\left. \frac{ \partial \beta}{ \partial s}(s, (t,p)) \right|_{s=0} = V(t,p) = \frac{ \partial }{ \partial u^1} = \left. \frac{d}{ds} \beta^{(t,p)}(s) \right|_{s=0}
+\]
+then a $\beta$ that satisfies these conditions above is 
+\[
+\beta(s,(t,p)) = \beta_s(t,p) = (u^1 + s, u^2 \dots u^n)
+\]
+so that we can conclude that 
+\[
+\widetilde{\theta}_s(t,p) = (t+s, u^1 + s, u^2 , \dots , u^n)
+\]
+
+For fixed $s$, then
+\[
+d(\widetilde{\theta}_{-s})_{\widetilde{\theta}_s(t,p)} =1_{T_{\widetilde{\theta}_s(t,p)}(\mathbb{R}\times M)}
+\]
+so that 
+\[
+\begin{gathered}
+  d(\widetilde{\theta}_{-s})_{\widetilde{\theta}_s(t,p)}(W_{\widetilde{\theta}_s(t,p)}) = d(\widetilde{\theta}_{-s})_{\widetilde{\theta}_s(t,p)} \cdot W^j(t+s,u^1 +s, u^2 \dots u^n) \left. \frac{ \partial }{ \partial u^j} \right|_{\widetilde{\theta}_s(t,p)} = W^j(t+s,u^1+s, u^2 \dots u^n) \left. \frac{ \partial }{ \partial u^j} \right|_{(t,p)} \\
+\Longrightarrow \left. \frac{d}{ds} \right|_{s=0} W^j(t+s,u^1+s, u^2 \dots u^n) \left. \frac{ \partial }{ \partial u^j} \right|_{(t,p)} = \left( \frac{\partial }{ \partial t} W^j(t,u^1 \dots u^n) + \frac{ \partial }{ \partial u^1 } W^j(t,u^1 \dots u^n) \right) \left. \frac{ \partial}{ \partial u^j} \right|_{(t,p)}
+\end{gathered}
+\]
+
+
+Thus, we can conclude that 
+\begin{equation}
+  \boxed{ \mathcal{L}_{\widetilde{V}}W = \mathcal{L}_{ \frac{ \partial }{ \partial t} +V}W = \left( \mathcal{L}_{ \frac{ \partial}{ \partial t} V } W \right)_{(t,p)} = \left( \left( \frac{ \partial }{ \partial t} + V \right) W^j \right) \left. \frac{ \partial }{ \partial x^j} \right|_{(t,p)} }
+\end{equation}
+ 
+
+So, so far we have
+\begin{equation}
+  \boxed{ \int_{B(t)} m \otimes \left( \frac{ \partial u^i}{ \partial t} + u^j \frac{ \partial }{ \partial x^j} u^i \right)\frac{ \partial }{ \partial x^i} = \int_{B(t)} m\otimes b + \int_{\partial B(t)} T^{ij} dS_j \otimes \frac{\partial}{ \partial x^i} }
+\end{equation}
+
+See Eq. \ref{Eq:Issuesurfacestress} for the 2 possibilities I raise and the issue related to it.  Then we either have 1 of 2 possibilities:
+\begin{equation}
+  \begin{gathered}
+    \rho \left( \frac{ \partial u^i}{ \partial t} + u^j \frac{ \partial u^i}{ \partial t} \right) = \rho b^i + \frac{ \partial T^{ij}}{ \partial x^j}  \text{ or } \\ 
+    m \left( \frac{ \partial u^i}{ \partial t} + u^j \frac{ \partial u^i}{ \partial x^j} \right) = mb^i + \nabla (T^{ij}dS_j)
+\end{gathered}
+\end{equation}
+
+Nevertheless, for the equilibrium condition of $\dot{P}=0$, then we have either 1 of 2 possibilities:
+\begin{equation}\label{Eq:equilibrium2possibilities}
+  \begin{gathered}
+0 = \rho b^i + \frac{ \partial T^{ij}}{ \partial x^j}  \text{ or } \\ 
+0 =  mb^i + \nabla (T^{ij}dS_j)
+\end{gathered}
+\end{equation}
+
+For the second possibility, from Eq. \ref{Eq:covariantderT}, with $\nabla (T^{ij}dS_j) = \left( \frac{ \partial T^{ij}}{ \partial x^j} + \Gamma^i_{jk} T^{jk} \right)\text{vol}^n$, then 
+\[
+\begin{gathered}
+  0 = \rho \text{vol}^n b^i + \left( \frac{ \partial T^{ij}}{ \partial x^j} + \Gamma^i_{jk} T^{jk} \right)\text{vol}^n 
+\end{gathered}
+\]
+so then 
+\begin{equation}
+ 0 = \rho b^i + \left( \frac{ \partial T^{ij}}{ \partial x^j} + \Gamma^i_{jk} T^{jk} \right) 
+\end{equation}
+
+
+\section{``Moments''}
+
+cf. A.c. ``Symmetry of Cauchy's Stress Tensor in $\mathbb{R}^n$'', Appendix A Forms in Continuum Mechanics, of Frankel (2004) \cite{TFrankel2004}.  
+
+
+
+\section{Free energy}
+
+Consider the strain tensor $u \in \Gamma(T^*M \otimes T^*M) \equiv \Gamma( \otimes_{i=1}^2 T^*M)$.  Then consider
+\[
+\begin{gathered}
+\lambda \in \Gamma( (TM \otimes TM) \otimes (TM \otimes TM) ) \equiv \Gamma( \otimes_{i=1}^2TM \otimes_{i=1}^2TM) \\
+\lambda = \lambda^{iklm} (\partial_i \otimes \partial_k)\otimes (\partial_l \otimes \partial_m)
+\end{gathered}
+\]
+a rank-4 tensor, s.t. $\lambda$ is symmetric in $i,k$ and $l,m$, from the symmetry of the strain tensor $u$.  
+
+
+General form of free energy is 
+\[
+F = \frac{1}{2} \lambda^{iklm} u_{ik} u_{lm}
+\] 
+Then the relationship to the stress tensor $T$ is
+\[
+T^{ik} = \frac{ \partial F}{ \partial u_{ik}} 
+\]
+Now
+\[
+\begin{gathered}
+  \frac{ \partial F}{ \partial u_{ik}} = \frac{1}{2} ( \lambda^{iklm}u_{lm} + \lambda^{lmik}u_{lm}) = \lambda^{iklm} u_{lm} \\
+  \Longrightarrow T^{ik} = \lambda^{iklm}u_{lm}
+\end{gathered}
+\]
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=1.1em, column sep=4.8em, minimum width=1.1em]
+  {
+\otimes^2_{i=1} TM \otimes \otimes^2_{i=1} TM  & \otimes_{i=1}^2 TM  \\
+\lambda & \lambda^{iklm}u_{lm} \partial_i \otimes \partial_k = T \\
+};
+  \path[->]
+  (m-1-1) edge node [above] {$(-,u)$} (m-1-2) ;
+  \path[|->]
+  (m-2-1) edge node [above] {$(-,u)$} (m-2-2)
+  ;
+\end{tikzpicture}  
+
+
+
+\section{Linearization}
+
+cf. pp. 241, Sec. 3, Chapter 4 ``Linearization'' of Marsden and Hughes \cite{JMarsdenTHughes1994}.  
+
+\begin{definition}\label{Def:Youngsmodulus}
+  \emph{Young's modulus} $E$ is given by 
+\begin{equation}
+  E := \frac{ \mu (3 \lambda + 2 )}{ \lambda + \mu }
+\end{equation}
+\end{definition}
+
+\begin{definition}\label{Def:Poissonsratio}
+  Poisson's ratio $\nu$ is given by 
+\begin{equation}
+  \nu = \frac{ \lambda }{ 2 (\mu + \lambda)}
+\end{equation}
+\end{definition}
+
+Then, solving for $\lambda$, $\mu$, the Lam\'e parameters $\lambda$, $\mu$ is given as follows (one can solve this with Sage Math, using the commands
+\begin{lstlisting}[frame=single]
+sage: E,nu,mu,lmbd = var('E nu mu lmbd')
+sage: solve([ E== mu*(3*lmbd +2*mu)/(lmbd+mu), nu == lmbd/(2*(mu+lmbd))], mu,lmbd)
+[[mu == 1/2*E/(nu + 1), lmbd == -E*nu/(2*nu^2 + nu - 1)], [mu == 0, lmbd == 0]]
+\end{lstlisting}
+
+\begin{definition}\label{Def:Lame1stparameter}
+  \emph{Lam\'e first parameter} $\lambda$ is 
+\begin{equation}
+  \lambda = \frac{E \nu }{ (1+\nu)(1-2 \nu ) }
+\end{equation}
+\end{definition}
+
+\begin{definition}\label{Def:Lamesheermodulus}
+  \emph{Lam\'e second parameter} or \emph{sheer modulus} $\mu$ is 
+\begin{equation}
+  \mu = \frac{E}{2(1+\nu)}
+\end{equation}
+\end{definition}
+
+
+
+\section{Review of Thermodynamics}
+
+Let $\Sigma$ be the manifold of equilibrium (and non-equilibrium) states of the system.  
+
+\begin{proposition}[First Law: Energy Conservation]
+\begin{equation}
+dU = Q - dW = Q - pdV
+\end{equation}
+\end{proposition}
+with $U, p ,V \in C^{\infty}(\Sigma)$, and $dU, Q, dW , dV \in \Omega^1(\Sigma)$, and where $U$ is internal energy, $p$ is pressure, $V$ is the volume of the system.  
+
+\begin{proposition}[Second Law]
+\begin{equation}
+  Q = TdS
+\end{equation} where $Q, dS \in \Omega^1(\Sigma)$, and $S \in C^{\infty}(\Sigma)$ and
+with 
+\begin{equation}
+  dS \geq 0
+\end{equation} describing irreversibility.  
+\end{proposition}
+
+\begin{definition}[Enthalpy]
+  \begin{equation}
+    H = U + pV
+\end{equation}
+where $H$ is the \textbf{enthalpy}, $H \in C^{\infty}(\Sigma)$.  
+\end{definition}
+
+Now, for $M$ being the molar mass, and defining per unit mass quantities as we go,
+\[
+\begin{gathered}
+  dH = dU + Vdp + pdV = Q + Vdp = TdS + Vdp \\
+  \xrightarrow{ 1/M} \frac{dH}{M} = dh = T \frac{dS}{M} + \frac{V}{M} dp = Tds + \frac{dp}{\rho}
+\end{gathered}
+\]
+where $\rho = M/V$.  
+
+Now the total energy in a fluid occupying region $V_0$ is 
+\[
+\int_{V_0} \left( \frac{1}{2} \rho v^2 + \rho \epsilon \right)\text{vol}^n
+\]
+where $\int_{V_0} \frac{1}{2} \rho v^2 \text{vol}^n$ is the total kinetic energy of fluid and $\epsilon$ internal energy per unit mass.  
+
+The time rate of change of the energy is 
+\[
+\begin{gathered}
+  \frac{d}{dt} \int_{V_0} ( \frac{1}{2} \rho v^2 + \rho \epsilon )\text{vol}^n = \int_{V_0} \mathcal{L}_{ \frac{\partial}{\partial t} + v } (\frac{1}{2} \rho v^2 + \rho \epsilon )\text{vol}^n = \int_{V_0} \frac{\partial }{\partial t} (\frac{1}{2} \rho v^2 + \rho \epsilon ) \text{vol}^n + \mathcal{L}_v ((\frac{1}{2} \rho v^2 + \rho \epsilon ) \text{vol}^n ) = \\
+  = \int_{V_0} \frac{\partial }{\partial t} (\frac{1}{2} \rho v^2 + \rho \epsilon ) \text{vol}^n + di_v ((\frac{1}{2} \rho v^2 + \rho \epsilon ) \text{vol}^n ) 
+\end{gathered}
+\]
+
+
+
+
+
+
+Let domain be the smooth submanifold $\mathcal{D} \subset N$, $N$ is the spatial manifold. $\text{dim}a = \text{dim}N=n$; spacetime manifold $M = \mathbb{R}\times N$.  \\
+\phantom{Let} $a =(a^i) \in \mathcal{D}$ is a particle label.  
+
+\part{On MIT OCW 16.20 Fall 2002 Structural Mechanics}
+
+I review MIT OCW 16.20\cite{PLagace2002} and add onto the material.  
+
+\section*{Unit 3: (Review of) Language of Stress/Strain Analysis}
+
+Day 4,5: ``Unit 3: Language of Stress/Strain Analysis (Review)
+Definition of Stress and Strain; Notation; Tensor Rules; Tensor vs. Engineering Notation; Contracted Notation; Matrix Notation.''
+
+I'm going to set the notation along the lines of wikipedia, differential geometry, and Landau and Liftshitz \cite{LLandauELifshitz1970}.  
+
+\section*{Unit 4: Equations of Elasticity}
+
+Day 6,7,8: Unit 4: Equations of Elasticity (Review)
+Equations of Elasticity (Equilibrium, Strain-Displacement, Stress-Strain); Static Determinance; Compatibility; Elasticity Tensor; Material Types and Elastic Components; Materials Axes vs. ``Loading Axes''; Compliance and its Tensor; The Formal Strain Tensor; Large Strains vs. Small Strains; Linear vs. Nonlinear Srain.
+
+\href{http://ocw.mit.edu/courses/aeronautics-and-astronautics/16-20-structural-mechanics-fall-2002/lecture-notes/unit4.pdf}{MIT OCW 16.20 Unit 4}
+
+Let $M$ be a smooth manifold equipped with a metric $g$, $(M,\mathcal{O},\mathcal{A},g)$ of space.  If one can consider a spacetime manifold $M$, please let me know.  Otherwise, assume a foliation by time $t\in \mathbb{R}$, so that we are considering $\mathbb{R}\times M$.  \\
+Let $b \in \mathfrak{X}(M)$. \\
+\phantom{Let} $b$ is the force per unit mass on the (compact) body $B\subset M$ s.t. $\text{dim}B = \text{dim}M$  \\
+Let $m:= \rho \text{vol}^n$, $\text{vol}^n$ a $n$-volume form on $M$, $\text{dim}M=n$, with $\rho \in C^{\infty}(M)$, $\rho$ the mass density.  So $m\in \Omega^n(M)$.  \\
+Let $b\otimes m \in \Omega^n(M,TM)$, a vector-valued $n$-form.  \\
+$\int_B b\otimes m$ is the total force on the compact body $B$ due to the external force $b$ acting directly on the body $B$.  \\
+The forces on the body $B$ due to the Cauchy stress tensor $T$, is on the surface or boundary of the body $B$, $\partial B$, given by $\int_{\partial B} T^{ij} dS_j$.  
+
+\subsection{Equilibrium}
+
+From Eq. \ref{Eq:equilibrium2possibilities}, the equilibrium condition that $\sum F_{\text{ext}}=0$, the sum of all external forces $F_{\text{ext}}$ on a body $B$ is $0$ means either 1 of 2 possibilities:
+\[ 
+ \begin{gathered}
+0 = \rho b^i + \frac{ \partial T^{ij}}{ \partial x^j}  \text{ or } \\ 
+0 =  mb^i + \nabla (T^{ij}dS_j)
+\end{gathered}
+\]
+If the second possibility is true, then
+\begin{equation}
+\boxed{ 0 = \rho b^i + \left( \frac{ \partial T^{ij}}{ \partial x^j} + \Gamma^i_{jk} T^{jk} \right)  }
+\end{equation}
+which is the general form for \textbf{equilibrium}.  
+
+\subsection{Strain-Displacement}
+
+From Eq. \ref{Eq:strain00} and Def. \ref{Def:straintensor}, we obtain the general form for the strain tensor on the reference body $B\subset M$, with coordinates $a^i$, which comes from the Lie derivative of the metric $g$ for reference manifold $M$, $\mathcal{L}_ug$, by a deformation of $B$ according to vector field $u \in \mathfrak{X}(B)$ 
+\begin{equation}\label{Eq:strain01}
+u = u_{ij} da^i \otimes da^j = \frac{1}{2} \left( g_{kj} \frac{ \partial u^k}{ \partial a^i } + g_{ik} \frac{ \partial u^k}{ \partial a^j} + u^k \frac{ \partial g_{ij} }{ \partial a^k } \right) da^i \otimes da^j
+\end{equation}
+In Cartesian coordinates, it's clear that Eq. \ref{Eq:strain01} reproduces the strain tensor in pp. 4 of the Unit 4 lecture slide.  
+
+
+\section*{Unit 13 Review of Simple Beam Theory}
+
+\subsection*{IV. General Beam Theory}
+
+Choice of $x,y,z$ axes, or $1,2,3$-axes appears to motivated by attach the beam to an airplane, with $z$ or $3$ axis being ``vertical'' (going up to space), and $y$ or $2$ axis being the symmetry axis of the airplane and also in the ``horizontal'' plane; $x$ or $1$ axis is along the length of the beam or its symmetry axis.  Thus, the beam's cross section is in the $y,z$ or $2,3$ directions.
+
+For a rocket, then the $z$ or $3$-axis is the symmetry axis of the rocket, and the $x,y$ or $1,2$ directions are in the horizontal cross section of the rocket.  
+
+With Lagace's notation on the left and my notation on the right,
+
+\[
+\begin{gathered}
+\sigma = \sigma^{ij} \frac{ \partial }{ \partial x^j} \otimes \frac{ \partial }{ \partial x^i} \in \Gamma(\otimes^2T\mathbb{R}^3) \end{gathered} \quad \quad \quad \, 
+\begin{gathered}
+  T = T^{ij} \frac{ \partial }{ \partial x^j} \otimes \frac{ \partial }{ \partial x^i} \in \Gamma(\otimes^2 TN)
+\end{gathered}
+\] 
+Take no stresses in $y$ or $2$-direction
+
+\[
+\begin{gathered}
+  \sigma_{22}, \sigma_{23}, \sigma_{12} = \sigma_{21} = 0 
+\end{gathered} \quad \quad \quad \, 
+\begin{gathered}
+T_{22}, T_{23}, T_{12}=T_{21} = 0 
+\end{gathered}
+\]
+
+Assume
+\[
+\begin{aligned}
+  & \sigma_{11} >> \sigma_{33} \\ 
+  & \sigma_{13} >> \sigma_{33}
+\end{aligned} \quad \quad \quad \, 
+\begin{aligned}
+  & T_{33} >> T_{22} \\ 
+  & T_{32} >> T_{22}
+\end{aligned}
+\]
+So only significant stresses are $\sigma_{11}$, $\sigma_{13}$.  
+
+
+
+\part{On MIT OCW 16.255 Computational Mechanics of Materials}
+
+\section{Lecture 1: Elastic Solids; Legendre Transformation; Isotropy; Equilibrium; Compatibility; Constitutive Relations; Variational Calculus; Example of a Functional: String; Extrema - Calculus of Variations; Local Form of Stationarity Condition}
+
+\href{http://ocw.mit.edu/courses/aeronautics-and-astronautics/16-225-computational-mechanics-of-materials-fall-2003/lecture-notes/lecture_01.pdf}{Elastic Solids; Legendre Transformation; Isotropy; Equilibrium; Compatibility; Constitutive Relations; Variational Calculus; Example of a Functional: String; Extrema - Calculus of Variations; Local Form of Stationarity Condition.}   
+
+\subsection{Elastic solids}
+
+Let \text{deformation power} be 
+\[
+\sigma^{ij} \dot{\epsilon}_{ij}
+\]
+EY : 20150728 in my notation and Landau and Lifshitz's \cite{LLandauELifshitz1970}, this would be $t^{ij} \dot{u}_{ij}$.  
+
+Consider a cycle of deformation $\begin{aligned} & \quad \\
+  & \Gamma:J \subset \mathbb{R} \to B \\ & \Gamma(t) \in B \end{aligned}$ with time interval $J = [0,T]$ and so $t\in [0,T]$.  Now for elastic deformation, we would expect $\epsilon_{ij}(T) = \epsilon_{ij}(0)$, i.e. the material will return back to its initial state after a deformation and bringing it back to its original configuration, so that $\Gamma(0) = \Gamma(T)$.  
+
+If $\oint_{\Gamma} T^{ij} \dot{u}_{ij} dt= 0$, then $T^{ij}\dot{u}_{ij} dt$ is an exact form.  
+
+$\Longleftrightarrow \, \exists \, W(u_{ij})$ s.t. $T^{ij} = \frac{ \partial W}{ \partial u_{ij}}$ so that $\oint T^{ij} \dot{u}_{ij} dt = \oint \frac{ \partial W}{ \partial u_{ij}} \frac{du_{ij}}{dt} dt = \oint dW(u_{ij}) = 0 $
+
+$W: T^*M \otimes T^*M \equiv \otimes^2 T^*M \to \mathbb{R}$ is called the \emph{strain energy density}, and takes as its argument, the strain tensor, $\epsilon$.  For this elastic case, the existence of $W$ is guaranteed and $\sigma^{ij} = \frac{ \partial W}{ \partial \epsilon_{ij}}$ with $\sigma^{ij}$ being the stress tensor, but on reference body $B$ (EY: 20150728 please correct me if I'm wrong on this point).  
+
+
+
+\subsection{Energy conservation}
+
+By the definition of power, being the time rate of change of energy (rather than energy conservation)
+
+\[
+\frac{d\mu}{dt} = T^{ij} \dot{u}_{ij}
+\]
+For this elastic case, as above, then 
+\[
+\frac{d\mu}{dt} = T^{ij} \dot{u}_{ij} = \frac{ \partial W}{\partial u_{ij}} \frac{du_{ij}}{dt} \quad \, \text{ elastic }
+\]
+Then 
+\[
+\mu = W(u_{ij}) + \mu_0
+\]
+
+\subsection{Legendre Transformation}
+
+Let's do the Legendre transform on strain energy density $W$, to obtain $\chi$, the \emph{complementary strain energy density}, which allows one to reexpress $\chi$ in terms of what would be the conjugate of strain tensor $\epsilon$ (which is what Legendre transforms do).  
+
+Given from above that $\sigma^{ij} = \frac{ \partial W}{ \partial \epsilon_{ij}}(\epsilon_{ij})$, 
+
+\[
+\begin{aligned}
+  & \chi = \sigma^{ij} \epsilon_{ij} - W(\epsilon) \\ 
+  & d\chi = d\sigma^{ij} \epsilon_{ij} + \sigma_{ij} d\epsilon_{ij} - \frac{ \partial W}{\partial \epsilon_{ij} } d\epsilon_{ij} = d\sigma^{ij}\epsilon_{ij} + 0 
+\end{aligned}
+\]
+
+Now
+\[
+d\chi = \frac{ \partial \chi}{ \partial \sigma^{ij}} d\sigma^{ij} = \frac{ \partial \chi}{ \partial \sigma^{ij}} \frac{ \partial \sigma^{ij}}{ \partial \epsilon^{kl} } d\epsilon_{kl}
+\]
+and 
+\[
+d\sigma^{ij}\epsilon_{ij} = \frac{ \partial \sigma^{ij}}{ \partial \epsilon_{kl}} d\epsilon_{kl} \epsilon_{ij}
+\]
+so
+\[
+\epsilon_{ij} = \frac{ \partial \chi }{ \partial \sigma^{ij}}
+\]
+There is the question of whether $\sigma^{ij}$ can be related to $\epsilon_{ij}$ through $\frac{ \partial \sigma^{ij} }{ \partial \epsilon_{kl}}$ in that this is invertible.  I'll assume it is invertible for this case.  
+
+\subsubsection{Example: Thermoelasticity}
+
+Suppose for \emph{linear thermoelasticity} (Hooke's law), that the strain energy density is 
+\begin{equation}
+  W = \frac{1}{2} (\epsilon_{ij} - \alpha_{ij}T) C^{ijkl}(\epsilon_{kl} - \alpha_{kl}T)
+\end{equation}
+Now $\epsilon -\alpha T \in \Gamma(T^*M \otimes T^*M) := \Gamma(\otimes^2T^*M)$, and so we can think of tensor $C = C^{ijkl}$ as defining as kinetic energy \emph{metric} on $\otimes^2T^*M$
+\[
+W = \frac{1}{2} \langle \epsilon-\alpha T, \epsilon-\alpha T\rangle_C = \frac{1}{2} \| \epsilon -\alpha T \|_C \in \mathbb{R}
+\]
+for $C\in \Gamma(\otimes^2TM \otimes^2TM)$.
+
+$C^{ijkl}$ is given by 
+\[
+C^{ijkl} = \frac{ \partial^2 W}{ \partial \epsilon_{ij} \partial \epsilon_{kl} }
+\]
+which is called the elastic moduli by Radovitzky \cite{RRadovitzky2003}, or (second) elasticity tensor in Marsden and Hughes \cite{JMarsdenTHughes1994}.  
+
+Now
+\[
+\sigma^{ij} = \frac{ \partial W}{ \partial \epsilon_{ij}}(\epsilon_{ij}) = C^{ijkl}(\epsilon_{kl} - \alpha_{kl}T)
+\]
+
+If $C$ is invertible, i.e. $\exists \, C^{-1}$, then
+\[
+C^{-1}_{ijkl} \sigma^{ij} = \epsilon_{kl} - \alpha_{kl}T \text{ so } C^{-1}_{ijkl}\sigma^{ij} + \alpha_{kl} T = \epsilon_{kl}
+\]
+
+Now
+\[
+\begin{aligned}
+& \sigma^{ij} \epsilon_{ij} = \sigma^{ij}(C^{-1}_{klij} \sigma^{kl} + \alpha_{ij} T) \\
+& W =\frac{1}{2} C^{-1}_{klij} \sigma^{kl} C^{ijpq}C^{-1}_{mnpq}\sigma^{mn} = \frac{1}{2} C^{-1}_{klmn}\sigma^{kl} \sigma^{mn}  
+\end{aligned}
+\]
+so
+\[
+\chi = \sigma^{ij}\epsilon_{ij} - W(\epsilon) = \frac{1}{2} C^{-1}_{ijkl} \sigma^{ij}\sigma^{kl} + \sigma^{ij}\alpha_{ij}T
+\]
+confirming the expression for the Exercise on pp.4 of Unit 1 for MIT OCW 16.225 \cite{RRadovitzky2003}.  
+
+Consider the symmetries of $C$.  Let $d$ be the dimension of space.  Usually, $d=3$.  \\
+For $C$ of ``rank'' 4, then there are $d*d*d*d= d^4$ possible values or $3^4=81$.  \\
+But $C^{ijkl}$ is symmetric about $i,j$.  Recall that $\frac{d(d+1)}{2}$ is the number of independent values of a $d\times d$ matrix (think of an upper triangle, including the diagonal elements. Then use the sum formula for $1+2+\dots + d = \frac{d(d+1)}{2}$).  $\frac{d(d+1)}{2} = 6$ and so if $k,l$ didn't have symmetry, $k$,$l$ would contribute $3*3=9$ different, independent values, for $6*9=54$.\\
+$C^{ijkl}$ is also symmetric about $k,l$, and so, likewise, $(\frac{d(d+1)}{2})^2 = 6*6=36$.  \\
+Now $C\in \Gamma(\otimes^2 TM \otimes \otimes^2TM)$ so it's symmetric about $i,j$ and $k,l$, i.e. $C^{ijkl} = C^{klij}$.  Then using the same $\frac{d(d+1)}{2}$ formula, except imagining that we relabel with the 6 $ij$ coordinates (imagine a $6\times 6$ symmetric matrix), then $\frac{6(6+1)}{2} = 21$.
+
+\subsubsection{Isotropy}
+
+\[
+C^{ijkl} = \lambda \delta^{ij} \delta^{kl} + \mu (\delta_{ik} \delta_{jl} + \delta_{il} \delta_{jk})
+\]
+$\lambda,\mu$ Lam\'e constants
+
+thermal isotropy: $\alpha_{ij} = \alpha \delta_{ij}$
+
+\[
+\sigma_{ij} = \lambda \epsilon_{kk} \delta_{ij} + \mu(\epsilon_{ij} + \epsilon_{ji}) - \alpha T(\lambda_{ij} 3 + \mu 2 \delta_{ij} )
+\]
+
+\[
+W = \frac{1}{2} \sigma^{ij} \epsilon_{ij} = \frac{1}{2}[\lambda \epsilon_{kk} \delta_{ij} \epsilon_{ij} + 2 \mu \epsilon_{ij} \epsilon_{ij} ] = \frac{1}{2} \lambda \epsilon_{kk}^2 + \mu \epsilon_{ij}\epsilon_{ij}
+\]
+
+\subsection{Summary of field equations of linearized elasticity}
+
+\[
+S = \partial B = S_1 \bigcup S_2 , \quad \, S_1 \bigcap S_2 = \emptyset
+\]
+$S_1$: displacement boundary \\
+$S_2$ traction boundary
+
+\subsubsection{Compatibility}
+
+$\epsilon_{ij} = \frac{1}{2} ( \frac{ \partial u^i}{ \partial a^j} + \frac{ \partial u^j}{ \partial a^i } )$ in $B$ \\
+$u = \overline{u}$ on $S^1$.  
+
+$\epsilon_{ij}$ is the usual strain tensor that describes the strain (and directed forces) that the material inherently experiences due to a deformation (diffeomorphism) from the reference body $B$ (with parts of it labeled by $a^i$ coordinates).  
+
+$S_1$ was called the displacement boundary, and $u = \overline{u}$ implies that this is the extent of the displacement or deformation.  EY : 20150729 I think this is the boundary on which we're pulling or pushing on; please correct me if I'm wrong.  
+
+\subsubsection{Equilibrium}
+
+$\frac{ \partial \sigma^{ij}}{ \partial j} + f_i = 0$ in $B$ \\
+$\sigma^{ij}n_j = \overline{t}_i$ on $S_2$.  
+
+\subsubsection{Constitutive relations}
+
+$\sigma^{ij} = \frac{ \partial W}{ \partial \epsilon_{ij}}$ \\
+$\epsilon_{ij} = \frac{ \partial \chi}{ \partial \sigma^{ij}}$
+
+\subsection{Variational Calculus}
+
+
+
+There are a number of references cited on page 5; I don't have any access to them.  So if you're trying to learn about structural mechanics then Marsden and Hughes' book is available online, on the late Prof. Marsden's website \cite{JMarsdenTHughes1994}.  
+
+Let \emph{field} $\begin{aligned} & \quad \\
+  & \mu : B \to N \\
+  & \mu(a) \in N \end{aligned}$ be a smooth mapping from the compact body $B$ to manifold $N$.  $N$ can be the manifold of states of the solid, or, as Marsden and Hughes had first implicated, $N$ is the configuration of body, $N$, after a deformation, represented by diffeomorphism $\Phi : B \subset M \to N$.  
+
+Consider a fiber bundle $(E, \pi ,B)$ over compact body $B$.  By the definition of a fiber bundle, $\forall \, (U,a^i)$, chart for $B$, then $\exists \, $ homeomorphism $\varphi : \pi^{-1}(U) \to U\times N$; without loss of generality, suppose $\varphi$ is a diffeomorphism.  So $\pi^{-1}(U)$ is diffeomorphic to $U \times N$, i.e. $\pi^{-1}(U) \cong U \times N$.    
+
+A field is part of this \emph{section} of this $\pi^{-1}(U) \cong U \times N$.  
+
+Here's what I mean. Field $\mu : B \to N$ maps $B$ to $N$.  Then for section $\widetilde{\mu} \in \Gamma(\pi)$, $\widetilde{\mu}(a) = (a,\mu(a))$ for $a\in B$.  That's why Marsden and Hughes \cite{JMarsdenTHughes1994} and I will call field $\mu$ a section of fiber bundle $(E,\pi,B)$, even though we'll treat $\mu$ as $\mu :B\to N$.  
+
+Thus, 
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=5.1em, column sep=5.8em, minimum width=2.2em]
+  {
+E & B\times N  \\
+B &  \\
+};
+  \path[<->]
+  (m-1-1) edge node [above] {$\cong$} (m-1-2);
+\path[->]
+  (m-2-1) edge node [auto]  {$\widetilde{\mu}$} (m-1-1)
+          edge node [below right] {$(-,\mu)$} (m-1-2)
+  ;
+\end{tikzpicture}   \quad \quad \quad \, \begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=5.1em, column sep=5.8em, minimum width=2.2em]
+  {
+\widetilde{\mu}(a) & (a,\mu(a))  \\
+a &  \\
+};
+  \path[<->]
+  (m-1-1) edge node [above] {$\cong$} (m-1-2);
+\path[|->]
+  (m-2-1) edge node [auto]  {$\widetilde{\mu}$} (m-1-1)
+          edge node [below right] {$(-,\mu)$} (m-1-2)
+  ;
+\end{tikzpicture}  
+
+Consider the push forward of field $\mu$, $(\mu)_* \equiv D\mu : TB \to TN$.  $D\mu$, if $N$ is considered the configuration of the body $B$, is the deformation gradient of configuration $\mu(B)$.  Locally, $D\mu_a \equiv D\mu(a) = \frac{ \partial \mu^i}{ \partial a^j}(a)$.  
+
+Thus,
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=2.4em, column sep=5.8em, minimum width=2.2em]
+  {
+  &            & TB \otimes TN \\
+E & B \times N &               \\
+  &            & TB \\
+  & B          &  \\
+};
+  \path[<->]
+  (m-2-1) edge node [above] {$\cong$} (m-2-2);
+\path[->]
+  (m-2-2) edge node [auto]  {$$} (m-1-3)
+  (m-4-2) edge node [below left] {$\widetilde{\mu}$} (m-2-1)
+          edge node [right] {$(-,\mu)$} (m-2-2)
+          edge node [auto] {$$} (m-3-3)
+  (m-3-3) edge node [auto] {$$} (m-1-3)
+  ;
+\end{tikzpicture}  \quad \quad \quad \, \begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=2.4em, column sep=5.8em, minimum width=2.2em]
+  {
+  &            & (A, (D\mu)_aA) \\
+\widetilde{\mu}(a) & (a,\mu(a)) &               \\
+  &            & A= A^i(a)\frac{\partial}{\partial a^i} \\
+  & a          &  \\
+};
+  \path[<->]
+  (m-2-1) edge node [above] {$\cong$} (m-2-2);
+\path[|->]
+  (m-2-2) edge node [auto]  {$$} (m-1-3)
+  (m-4-2) edge node [below left] {$\widetilde{\mu}$} (m-2-1)
+          edge node [right] {$(-,\mu)$} (m-2-2)
+          edge node [auto] {$$} (m-3-3)
+  (m-3-3) edge node [auto] {$$} (m-1-3)
+  ;
+\end{tikzpicture} 
+
+At this point, I should make a comment about the ``splitting'' (connection) that the fiber bundle $E$ carries, that was mentioned in Marsden and Hughes \cite{JMarsdenTHughes1994}:
+
+\begin{tikzpicture}
+  \matrix (m) [matrix of math nodes, row sep=1.7em, column sep=5.8em, minimum width=1.5em]
+  {
+                                 & T_{\widetilde{\mu}(a)}E_a  \\
+  p = \widetilde{\mu}(a) \in E_a & \\
+                                 & TE_a \\
+  \pi^{-1}(a)=E_a          &  \\
+                           & T_aB = \text{ker}{\mathbb{P}_p} \\
+  a & \\
+};
+  \path[|->]
+  (m-4-1) edge node [auto] {$$}  (m-2-1)
+  (m-6-1) edge node [auto] {$$} (m-4-1) 
+  ; 
+\path[->]
+  (m-2-1) edge node [auto]  {$$} (m-1-2)
+  (m-4-1) edge node [below left] {$$} (m-3-2)
+  (m-6-1) edge node [auto] {$$} (m-5-2)
+  (m-5-2) edge node [auto] {$$} (m-3-2)
+           edge [bend right] node [right] {$D\widetilde{\mu}$} (m-1-2)
+  (m-3-2) edge node [auto] {$$} (m-1-2)
+  ;
+\end{tikzpicture}
+
+$\forall \, a \in B$, consider vector $\dot{\mu}_a \in T_{\mu(a)}E_a$ in the tangent space of the fiber over $a$, $E_a$.  
+
+Let $\Xi$ be the bundle over $B$, with a fiber over $B$ being a triple $(E,TE,T(\pi^{-1}))$, i.e. \\
+$\Xi:= (E,TE, T(\pi^{-1})) \xrightarrow{ \pi_{\Xi}} B$ \\
+\phantom{Let} $\pi^{-1}_{\Xi}(a) = (\mu_a, \dot{\mu}_a, (D\mu)_a)$.  
+
+Consider a (Lagrangian) functional density $\mathcal{L}$, $\mathcal{L}:B\times \Xi \to \mathbb{R}$, i.e. \\
+$\mathcal{L}: \Xi \to \mathbb{R}$ \\
+$\mathcal{L}(a,\mu_a, \dot{\mu}_a, (D\mu)_a)$.  
+
+Let $\phi : E \to \mathbb{R}$ be a smooth function on fiber bundle $E$ over $B$, i.e. \\
+$\phi:E \to \mathbb{R}$ \\
+$\phi(a,\mu(a)) \in \mathbb{R}$.  
+
+Thus, the (Lagrangian) functional $L$ is a smooth map from tangent bundle $TN$ to $\mathbb{R}$:
+\begin{equation}
+  \begin{aligned}
+    & L: TN \to \mathbb{R} \\
+    & L(\mu,\dot{\mu}) = \int_B \mathcal{L}(a, \mu, \dot{\mu},D\mu) dV - \int_{S_2} \phi(a,\mu)dS
+\end{aligned}
+\end{equation}
+
+At this point, I will defer to the derivation as presented by Radovitzky in Unit 1 \cite{RRadovitzky2003}.  With $\mathcal{L}$ being denoted by Radovitzky's $F$ in his treatment, and $\eta \in N$, One should note the integration by parts step:
+
+\begin{equation}\label{Eq:Lintegrationbyparts}
+\int_B \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right)} \frac{ \partial \eta^i}{ \partial a^j} da^j = \int \left[ \frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^i \right) - \frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \right) \eta^i \right] da^j
+\end{equation}
+The second term, $\frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \right) \eta^i$ adds to $\frac{ \partial \mathcal{L}}{ \partial \mu^i}$ to give, as $\eta^i$ is arbitrarily small, the usual Euler-Lagrange equation part on the compact body $B$:
+\begin{equation}
+\boxed{ \frac{ \partial \mathcal{L}}{ \partial \mu^i} - \frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \right) = 0 \quad \, \forall \, a \in B }
+\end{equation}
+However, the first term of Eq. \ref{Eq:Lintegrationbyparts},$\frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^i \right)$, is problematic.  
+
+Consider this $n-1$-form on $B$, in $\Omega^{n-1}(B)$, with $\text{dim}B = n$:
+
+\[
+\frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \frac{ \eta^i}{ (n-1)!} \epsilon_{ji_2 \dots i_n} da^{i_2} \wedge \dots \wedge da^{i_n}
+\]
+Apply the exterior derivative $d:\Omega^{n-1}(B) \to \Omega^n(B)$:
+\[
+\begin{gathered}
+  \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \frac{ \eta^i}{ (n-1)!} \epsilon_{ji_2 \dots i_n} da^{i_2} \wedge \dots \wedge da^{i_n} \xrightarrow{d} \\
+  \frac{ \partial }{ \partial a^k} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^i \right) \frac{ \epsilon_{ji_2 \dots i_n} }{(n-1)!} da^k \wedge da^{i_2} \dots \wedge da^{i_n} =   \frac{ \partial }{ \partial a^k} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^i \right) \frac{ \epsilon_{ji_2 \dots i_n} }{(n-1)!} ( \epsilon^{ki_2 \dots i_n}_{j_1j_2\dots j_n} \frac{1}{n} da^{j_1} \wedge \dots \wedge da^{j_n} ) = \\
+  \frac{ \partial }{ \partial a^k} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^i \right) \delta^k_j \frac{1}{n!} \epsilon_{j_1 \dots j_n} da^{j_1} \wedge \dots \wedge da^{j_n} = \frac{1}{\sqrt{g}} \frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) }   \eta^i \right)\text{vol}^n
+\end{gathered}
+\]
+The problem is this: we'd want to use Stoke's theorem.  Recall, for $\theta \in \Omega^{n-1}(B)$, then Stoke's theorem is this:
+\[
+\begin{gathered}
+\int_B d\theta = \int_{\partial B} \theta
+\end{gathered}
+\]
+and in our case, we want to go from left to right, to the surface integral.  
+
+If the volume element $dV$ in Marsden and Hughes \cite{JMarsdenTHughes1994} is the volume form, $\text{vol}^n = \frac{\sqrt{g}}{n!} \epsilon_{i_1\dots i_n} da^{i_1} \wedge \dots \wedge da^{i_n}$, then, as of 20150728, I don't know how to apply Stoke's Theorem, as making $\int_B \frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^i \right) dV$ as differential of a $n-1$ form is problematic, with the $\sqrt{g}$ factors in $dV$, \emph{if} $dV$ is a volume form.  If it is not, or if $\sqrt{g}$ does not depend on the body reference coordinates $a^i \in B$, then we can concretely conclude that 
+\[
+\begin{gathered}
+\int_B \frac{ \partial }{ \partial a^j} \left( \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) }   \eta^i \right) dV = \int_{\partial B} \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \frac{ \eta^i}{ (n-1)!} \epsilon_{ji_2 \dots i_n} da^{i_2} \wedge \dots \wedge da^{i_n}
+\end{gathered}
+\]
+with $dV = da^1 \wedge \dots \wedge da^n = \frac{ \epsilon_{i_1 \dots i_n} }{n!} da^{i_1} \wedge \dots \wedge da^{i_n}$ and $dV$ is \emph{not} the volume form $\text{vol}^n$.  
+
+For the variation of $\int_{S_2} \phi(a, \mu) dS$, given on pp. 8 of Unit 1 \cite{RRadovitzky2003}, the very last term of the boxed equation, 
+\[
+\begin{gathered}
+  \int_{S_2} \frac{ \partial \phi}{ \partial \mu^i} \eta^i dS = \int \frac{ \partial \phi}{ \partial \mu^i} \langle \eta , dS\rangle^i
+\end{gathered}
+\]
+where
+\[
+\begin{gathered}
+  \langle \eta , dS \rangle^i = \eta^k \delta^{ik} \frac{1}{(n-1)!}\epsilon_{ki_2\dots i_n} da^{i_2} \wedge \dots \wedge da^{i_n}
+\end{gathered}
+\]
+If $\eta$ is normalized to have length 1 and so 
+\[
+\begin{gathered}
+dS_j := \frac{1}{(n-1)!} \epsilon_{ji_2\dots i_n} da^{i_2} \wedge \dots \wedge da^{i_n}  \\
+dS_{\eta} = \eta^j dS_j \Longrightarrow \int_{S_2} \frac{ \partial \phi}{ \partial \mu^i} \eta^i dS = \int_{S_2} \frac{ \partial \phi}{ \partial \mu^i } dS_i
+\end{gathered}
+\]
+and 
+\[
+\int_{\partial B} \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \frac{ \eta^i}{ (n-1)!} \epsilon_{ji_2 \dots i_n} da^{i_2} \wedge \dots \wedge da^{i_n} = \int_{S_2} \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta^idS_j
+\]
+
+\emph{If} we can exchange $\eta^i$ with the $\eta^j$ implied in $dS_j$, then 
+\begin{equation}
+  \boxed{  
+    \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } \eta_j - \frac{ \partial \phi}{ \partial \mu^i} = 0 
+}
+\end{equation}
+
+Marsden and Hughes \cite{JMarsdenTHughes1994} defined the \textbf{first Pioff-Kirchhoff stress} $P$ as such:
+\begin{definition}[First Pioff-Kirchhoff stress tensor]
+$P$ is a $(1,1)$-rank tensor (that is \emph{not} symmetric)
+\begin{equation}
+P := \frac{ \partial \mathcal{L}}{ \partial D\mu } = \frac{ \partial \mathcal{L}}{ \partial \left( \frac{ \partial \mu^i}{ \partial a^j} \right) } da^i \otimes \frac{\partial }{ \partial a^j} \in \Gamma(T^*M\otimes TM)
+\end{equation}
+\end{definition}
+
+Then $P^j_{\,\,i} n_j = \frac{ \partial \phi}{ \partial \mu^i}$, with $n_j$ being the $j$th component of the normal vector on $\partial B$ or $S_2$.  
+
+\part{Implementation}
+
+\section{FEniCS}
+
+\subsection{On Chapter 26 ``Applications in solid mechanics'' by \O lgaard and Well}
+
+These are some notes/commentary and implementations of Chapter 26 ``Applications in solid mechanics'' by Kristian B. \O lgaard and Garth N. Well in \textbf{Automated Solution of Differential Equations by the Finite Element Method} \cite{FEniCS}.  
+
+\subsubsection{On Preliminaries for the Governing Equations; the setup}
+
+cf. 26.2.1. Preliminaries, 26.2. ``Governing equations'' of the FEniCS book (2011) \cite{FEniCS}.  
+
+I'm trying to understand the setup and here's how I see it:
+
+Let polynomial domain $\Omega \subset \mathbb{R}^d$ ($d=3$ usually) \\
+Let $\Gamma_D \coprod \Gamma_N = \partial \Omega$ \\
+Let finite interval $I = (0,T]$ \\
+Let $\Omega_0 \subset \mathbb{R}^d$, reference domain \\
+Let triangulation of domain $\Omega \equiv \tau_h$ \\
+\phantom{Let } triangulation of $\Omega_0 \equiv \tau_0$ \\
+\phantom{Let } finite element cell $\tau \in \tau_h$.  
+
+\textbf{Find} $u\in V$.  
+
+Given $\begin{aligned} & \quad \\
+  & F: V\times V \to \mathbb{R} \\
+  & F(u;w) = 0 \quad \, \forall \, w \in V \end{aligned}$ , \, $V$ function space. 
+
+Let $\begin{aligned} & \quad \\
+  & \widetilde{F}:V \to V^* \\
+  & \widetilde{F}:w \mapsto F(-;w) \end{aligned}$
+
+$\widetilde{F} \in L(V,V^*)$ linear in $w$.  
+
+If $F$ linear in $u$, 
+
+\[
+F(u;w) := a(u,w)- L(w)
+\]
+where $\begin{aligned} & \quad \\
+  & a: V \times V \to \mathbb{R} \\
+  & a(u,w) \in \mathbb{R} \end{aligned}$ \, , \, $a$ bilinear in $u,w$ \\
+\phantom{where} $\begin{aligned} 
+  & L : V \to \mathbb{R} \\
+  & L(w) \in \mathbb{R} \end{aligned}$ \, linear in $w$.  
+
+So we'd want $a(u,w) = L(w)$ for $F=0$, $\forall \, w \in V$.    
+
+\[
+\frac{dF(u_0 + \epsilon du; w)}{ d\epsilon} \left. \right|_{\epsilon=0} = \frac{ \partial F}{ \partial u^j}(u_0 ;w) du^j = DF_{du}(u_0;w) := a(du,w)
+\]
+
+$L(w) = F(u_0,w)$ (EY: 20150804 why isn't that $L(w) = a(0,w) - F(0;w) = -F(0;w)$)
+
+So as \O lgaard and Well wrote, taking (26.4),(26.5) into (26.3) \cite{FEniCS}, which is 
+\[
+\begin{gathered}
+  a(du,w) := DF_{du}(u_0;w) = \left. \frac{dF(u_0 + \epsilon du;w)}{d\epsilon} \right|_{\epsilon=0} \\
+  L(w) := F(u_0,w)
+\end{gathered} \Longrightarrow a(u,w) = L(w)
+\]
+Then \O lgaard and Well says to take the step $u_0 \leftarrow u_0 -du$.  
+
+\[
+a(u_0 + du,w) = a(u_0,w) + a(du,w) = a(u_0,w) + DF_{du}(u_0;w) = L(w) + DF_{du}(u_0;w) = F(u_0,w) + DF_{du}(u_0;w)
+\]
+
+EY : 20150804 My read: \\
+When $u_0 \to u_0 + du_1 \to u_0 + du_1 + du_2 \to \dots \to u_0 + \sum_{I}^N du_I \equiv u_f$, \\
+\phantom{When} s.t. $F(u_f,w) < \epsilon$, $\epsilon$ is specified tolerance, \\
+Then $u$ is found. 
+
+\subsubsection{On Balance of momentum}
+
+cf. 26.2.2. Balance of momentum, 26.2. ``Governing equations'' of the FEniCS book (2011) \cite{FEniCS}.  
+
+With \O lgaard and Well's notation on the left, and mine on the right, the so-called balance of momentum condition is
+\[
+\begin{aligned}
+  & \rho \ddot{u} - \nabla \cdot \sigma = b \text{ in } \Omega \times I \\
+  & u = g \text{ on } \Gamma_D \times I \quad \, \text{$D$ for Dirichlet } \\ 
+  & \sigma n = h \text{ on } \Gamma_N \times I \quad \, \text{$N$ for Neumann } \\ 
+  & u(x,0) = u_0 \text{ in } \Omega \\
+ & \dot{u}(x,0) = v_0 \text{ in } \Omega
+\end{aligned} \quad \quad \quad \, 
+\begin{aligned}
+& \rho \ddot{u}^i - \frac{ \partial \sigma^{ij} }{ \partial x^j} = b^i \text { in } \Omega \times I \ni (x^i,t) \\ 
+ & u(x,t) = g(x,t) \text{ on } \Gamma_D \times I \\ 
+ & \sigma^{ij}n_j = \sigma^{ij}(x,t)n_j (x,t) = h^i(x,t) \text{ on } \Gamma_N \times I \\
+ & u(x,0) = u_0(x) \text{ in } \Omega \\
+& \dot{u}(x,0) = v_0(x) \text{ in } \Omega
+\end{aligned}
+\]
+
+where \\
+$\rho : \Omega \times I \to \mathbb{R}$ mass density \\
+$\rho(x,t) \in \mathbb{R}$ \\
+$u:\Omega \times I \to \mathbb{R}^d$ displacement field \\
+$u^i(x,t) \in \mathbb{R}$ \\
+$\begin{aligned} & \quad \\ 
+  & \sigma : \Omega \times I \to \mathbb{R}^d \times \mathbb{R}^d \\
+  & \sigma(x,t) = \sigma^{ij}(x,t) \end{aligned}$ symmetric Cauchy stress tensor \quad \quad \quad \, $\begin{aligned} & \quad \\ 
+  & \sigma = \sigma^{ij} \frac{ \partial }{ \partial x^j} \otimes \frac{ \partial }{ \partial x^i } \in \Gamma(\otimes^2 TN) \text{ (or $\Gamma(\otimes^2 T(\mathbb{R}\times N))$)} \\
+  & \sigma(x,t) = \sigma^{ij}(x,t) \frac{ \partial }{ \partial x^j} \otimes \frac{ \partial }{ \partial x^i} \end{aligned}$ \\
+$b: \Omega \times I \to \mathbb{R}^d$ body force \\
+$b^i(x,t) \in \mathbb{R}$ \\
+$g: \Omega \times I \to \mathbb{R}^d$ prescribed boundary displacement on $\Gamma_D$ \\
+$g^i(x,t) \in \mathbb{R}$ \\
+$h: \Omega \times I \to \mathbb{R}^d$ prescribed boundary traction on $\Gamma_N$ \\
+$h^i(x,t) \in \mathbb{R}$ \\
+$u_0 : \Omega \to \mathbb{R}^d$ initial displacement \\
+$u_0^i(x) \in \mathbb{R}$ \\
+$v_0 : \Omega \to \mathbb{R}^d$ initial velocity \\
+$v_0^i(x) \in \mathbb{R}$ 
+
+Constitutive model: 
+\[
+c^{ij}_{\,\,kl} u^ku^l = \sigma^{ij} \text{ with } \begin{aligned} \sigma = c^{ij}(u,u) \frac{ \partial }{ \partial x^j} \otimes \frac{ \partial }{ \partial x^i } \\
+  c\in \Gamma(\otimes^2 T^*N \otimes \otimes^2TN) \end{aligned}
+\]
+
+Consider weight function $w: \Omega \times I \to \mathbb{R}$.   \\
+Common practice, $w: \Omega \to \mathbb{R}$ and apply finite difference methods to deal with time derivatives.  
+
+For time $t\in I$, \\
+assuming $w=0$ on $\Gamma_D$ 
+\[
+\int_{\Omega} w \rho \ddot{u}^idv - \int_{\Omega} w \frac{ \partial \sigma^{ij}}{ \partial x^j} dv - \int_{\Omega} w b^i dv = 0 
+\]
+
+Consider the term $\int_{\Omega} w \frac{ \partial \sigma^{ij}}{ \partial x^j} dv$.  
+
+\subsubsection{On using Stoke's theorem}
+
+EY : 20150805 I want to clarify the usage of the ``divergence'' term in the general case of a Riemannian manifold, $(N,g')$.  
+
+One should note that even more general is the case of a vector-valued $n$-form on $N$, with $\text{dim}N=n$, but it is unclear if $D^2=0$ for $D$ being the exterior covariant derivative on $\Omega^n(N,TN)$.  But for the exterior derivative $d$, $d^2=0$, which leads to a deRham cohomology for $p$-forms on $N$.  I will consider this case.
+
+Now
+\[
+\int_{\Omega} w \text{div}\sigma^i \text{vol}^n_N := \int_{\Omega} w \frac{1}{\sqrt{g'}} \frac{ \partial \sigma^{ij} \sqrt{g'} }{ \partial x^j} \text{vol}^n_N
+\]
+
+Consider
+\[
+\begin{aligned}
+  & d(w \sigma^{ij}dS_j) := d(w \sigma^{ij} \frac{\sqrt{g'}}{ (n-1)!} \epsilon_{jj^2\dots j^n} dx^{j_2} \wedge \dots \wedge dx^{j_n} ) = \left( \frac{ \partial w }{ \partial x^k } \sigma^{ij} \sqrt{g'} + w \frac{ \partial (\sigma^{ij} \sqrt{g'})}{ \partial x^k} \right) \frac{ \epsilon_{j_1j_2 \dots j_n}}{ (n-1)!} dx^k \wedge dx^{j_2} \wedge \dots \wedge dx^{j_n} = \\
+  & = \left( \frac{ \partial w}{ \partial x^k} \sigma^{ij} \sqrt{g'} + w \frac{ \partial (\sigma^{ij} \sqrt{g'})}{ \partial x^k} \right) \frac{ \epsilon_{j_1j_2 \dots j_n}}{(n-1)!} \epsilon^{kj_2 \dots j_n}_{i_1 i_2 \dots i_n} dx^{i_1} \wedge \dots \wedge dx^{i_n} = \frac{ \partial w}{\partial x^j} \sigma^{ij} \text{vol}_N^n + w \frac{1}{\sqrt{g'}} \frac{ \partial (\sigma^{ij} \sqrt{g'})}{ \partial x^j} \text{vol}_N^n
+\end{aligned}
+\]
+
+The $dS_j \in \Omega^{n-1}(N)$ $n-1$-form replaces the need to ever have to define a normal vector field on $\partial \Omega$ (or, in another notation, on compact body $B=B(t)$, $\partial B(t)$).  $dS_j$ is indeed the surface area element with its normal in the $j$-direction as I'll show.  
+
+Consider $\text{dim}N =3$.  Consider these 2-forms representing a (``rectangular'' in coordinate space) surface area and (the only) corresponding nonzero value for the normal vector to that surface area element: \\
+$dx^1 \wedge dx^2$ \quad \quad \, $n^3=1$ \\
+$dx^1 \wedge dx^3$ \quad \quad \, $n^2=-1$ \\
+$dx^2 \wedge dx^3$ \quad \quad \, $n^1=1$ 
+
+Then by induction, the usual surface area element from undergraduate (high school?) vector analysis $d\mathbf{S} = \mathbf{n} dS$, is really
+\[
+d\mathbf{S} := \mathbf{n} dS \Longrightarrow dS_j = \sqrt{g'} (-1)^{j+1} dx^1 \wedge \dots \wedge \widehat{dx}^j \wedge \dots \wedge dx^n
+\]
+
+EY : 20150805 One should note that for Riemannian manifold $(N,g')$, the (problematic) factor $\sqrt{g'}$ in the volume for $\text{vol}^n_N$ and $dS_j$, for $dS_j = \sqrt{g'} dx^1 \wedge \dots \wedge \widehat{dx}^j \wedge \dots \wedge dx^n$.  This is to make it manifestly covariant, because $\epsilon$ Levi-Civita symbol has to transform as a pseudo-tensor.  Second, I'll show that this $dS_j$ is the same formally as $dS_j = \frac{\sqrt{g'}}{(n-1)!} \epsilon_{jj_2\dots j_n} dx^{j_2} \wedge \dots \wedge dx^{j_n}$.  
+
+\[
+\begin{gathered}
+  d(w \sigma^{ij} dS_j) = \\
+   = d(w \sigma^{ij} \sqrt{g'} dx^1 \wedge \dots \wedge \widehat{dx}^j \wedge \dots \wedge dx^n (-1)^{j+1}) = \left( \frac{ \partial w}{ \partial x^k} \sigma^{ij} + w \frac{ \partial \sigma^{ij} \sqrt{g'}}{ \partial x^k} \right) dx^k \wedge dx^1 \wedge \dots \wedge \widehat{dx}^k \wedge \dots \wedge dx^n (-1)^{j+1} = \\
+  = \left( \frac{ \partial w}{ \partial x^j} \sigma^{ij} + w \frac{1}{\sqrt{g'}} \frac{ \partial (\sigma^{ij}) \sqrt{g'} }{ \partial x^j} \right) (-1)^{j+1} \text{vol}^n_N (-1)^{j+1} =  \left( \frac{ \partial w}{ \partial x^j} \sigma^{ij} + w \frac{1}{\sqrt{g'}} \frac{ \partial (\sigma^{ij}) \sqrt{g'} }{ \partial x^j} \right)  \text{vol}^n_N
+\end{gathered}
+\]
+with
+\[
+dx^k \wedge dx^1 \wedge \dots \wedge \widehat{dx}^j \wedge \dots \wedge dx^n = (-1)^{j+1} \delta^{jk} dx^1 \wedge \dots \wedge dx^n
+\]
+and $\text{vol}_N^n = \sqrt{g'} dx^1 \wedge \dots \wedge dx^n$.  
+
+So clearly 
+\[
+d(w\sigma^{ij} dS_j) = \left( \frac{ \partial w}{ \partial x^j} \sigma^{ij} + w \text{div}\sigma^i \right) \text{vol}^n
+\]
+
+Then the use of Stoke's theorem ($\int_{\Omega} d\omega = \int_{\partial \Omega} \omega$) makes this clear:
+\[
+\int_{\Omega} w \text{div}\sigma^i \text{vol}^n_N = \int_{\Omega} \left( d(w\sigma^{ij} dS_j) - \frac{ \partial }{ \partial x^j} \sigma^{ij} \text{vol}^n \right) = \int_{\partial \Omega} w \sigma^{ij} dS_j - \int_{\Omega} \sigma^{ij} \text{vol}^n
+\]
+
+With $w=0$ on $\Gamma_D$, 
+\[
+F^i:= \int_{\Omega} w \rho \ddot{u}^i dv + \int_{\Omega} \sigma^{ij} \frac{ \partial w}{ \partial x^j} dv - \int_{\Gamma_N} w h^{ij} dS_j - \int_{\Omega} wb^i dv=  0
+\]
+
+\subsubsection{On Potential energy minimization}
+
+cf. 26.2.3. Potential energy minization, 26.2. ``Governing equations'' of the FEniCS book (2011) \cite{FEniCS}.  
+
+Consider total potential energy $\Pi$ of compact body $\Omega_0$
+\[
+\Pi = \Pi_{\text{int}} + \Pi_{\text{ext}}
+\]
+internal potential energy functional $\Pi_{text{int}}$
+\[
+\Pi_{\text{int}} = \int_{\Omega_0} \Psi_0(u) dV
+\]
+
+$\Psi_0 \equiv $ stored strain energy density
+\[
+\Pi_{\text{ext}} = -\int_{\Omega_0} b_0 \cdot u dv - \int_{\Gamma_{0,N}} h_0 \cdot u ds
+\]
+
+form of $\Psi_0$ defines a particular constitutive model.  
+
+$\Pi = \min_{u\in V} \Pi$ when $u$ stable solution $\Longleftrightarrow  D_w \Pi(u) = \left. \frac{d\Pi(u+\epsilon w) }{ d \epsilon } \right|_{\epsilon = 0} =: F(u;w)$
+
+\subsection{On Constitutive models}
+
+cf. 26.3. ``Constitutive models'' of the FEniCS book (2011) \cite{FEniCS}.  
+
+\subsubsection{On Linearized elasticity}
+
+cf. 26.3.1. Linearized elasticity, 26.3. ``Constitutive models'' of the FEniCS book (2011) \cite{FEniCS}.  
+
+isotropic, homogeneous material $\begin{aligned} & \quad \\
+   & \sigma = 2\mu \epsilon + 2\text{tr}(\epsilon)1 \\
+  & \sigma^{ij} = 2\mu \epsilon^{ij} + 2\text{tr}(\epsilon) \delta^{ij} \end{aligned}$
+
+stress tensor as function of strain tensor (in this case):
+
+\[
+\epsilon_{ij}  = \frac{1}{2} \left( \frac{ \partial u_i }{ \partial x^j} + \frac{ \partial u_j}{ \partial x^i} \right)
+\]
+$\mu,\lambda$ Lam\'e parameters.
+
+$\sigma^{ij} = C^{ijkl}\epsilon_{kl}$
+
+\[
+C^{ijkl} = \mu ( \delta^{ik} \delta^{jl} + \delta^{il} \delta^{jk} ) + \lambda \delta^{ij} \delta^{kl}
+\]
+
+\subsubsection{linelast, linelast01}
+
+At this point, one should take a look at and open up \verb|linelast.py| in the github repo and see that the Python code corresponds exactly with the mathematical expressions for the physics of the problem.  This is the case for the Unit Cube.  
+
+For \verb|linelast01.py|, I use a box mesh to try to model a strut with a very long rectangle.  I'm taking cross-sectional thickness to be about 1 in. ($2.54$ cm) and longitudinal, symmetry axis length of 2 ft. ($0.6$ m) because that was about the dimensions of the rocket strut in question in the second stage of Falcon 9, CRS-7 \footnote{\url{https://youtu.be/YNzhVqt4WQs}}.  
+
+I only took the Dirchlet conditions at $x=0$ and at $x=0.6 \, m$, ``left'' and ``right'', respectively, and declared it as clamp, such that $u =0$, with $u$ representing the displacement, as we ``clamp'' down the left and right ends of the rectangle.  They correspond to \verb|bcl, bcr|.  
+
+Then the code correspond exactly to the previously mentioned expressions.  I'll provide an abridged dictionary here:
+
+\[
+\begin{aligned}
+  & V \text{ a function space }
+  & g = 0 \text{ on } \Gamma_D \times I \text{ with } \Gamma_D = \Gamma_{D \, \text{ left}} \coprod \Gamma_{D \, \text{ right} } \\
+  & u \in V \, w :\Omega \times I \to \mathbb{R} \text{ (weight function) }\\
+  & \begin{aligned} 
+      & b : \Omega \times I \to \mathbb{R}^d \text{ body force } \\
+      & b^i(x,t) \in \mathbb{R}
+ \end{aligned} \text{ with } b^i = (0, \rho_0(2g), 0) \text{ units of Pascal/m}  \\
+  & E  = 200.0\times 10^9 \, \text{ Pa }, \, \nu = 0.29 \text{ Poisson's ratio for steel }
+\end{aligned}
+\]
+$\Longleftrightarrow$
+\begin{lstlisting}
+V = VectorFunctionSpace(mesh, 'Lagrange', 2)
+clamp = Constant((0.0, 0.0, 0.0))
+
+# Create test and trial functions, and source term
+u, w = TrialFunction(V), TestFunction(V)
+
+b = Constant((0.0, rho_0*2.*g_0, 0.0))
+
+# Elasticity parameters
+E, nu = 200.0*10**9, 0.29 # 200 GPa, Gigapascal, for steel #**9
+
+\end{lstlisting}
+
+Nevertheless, the most important expressions are for the stress-tensor and the so-called $F$:
+
+\[
+\begin{aligned}
+  & \sigma^{ij} = 2 \mu \epsilon^{ij} + \lambda \epsilon^{kk} \delta^{ij} \\
+  & F^i = \int_{\Omega} \sigma^{ij} \frac{ \partial w}{ \partial x^j} dv - \int_{\Omega} wb^i dv = 0 
+\end{aligned}
+\]
+$\Longleftrightarrow$
+
+\begin{lstlisting}
+# Stress
+sigma = 2*mu*sym(grad(u)) + lmbda*tr(grad(u))*Identity(w.cell().geometric_dimension())
+
+# Governing balance equation
+F = inner(sigma,grad(w))*dx - dot(b,w)*dx
+\end{lstlisting}
+
+It's clear from this example how the use of the authors' so-called Unified Form Language (UFL) of the FEniCS book \cite{FEniCS} comes into play in this example.  
+
+One could plot $u$, the displacement, over the rectangular mesh, after it's been solved.  I found that $u$ was in the order of magnitude of $10^{-6} \, m$, which is small.  It seems that the stress tensor values $\sigma^{ij}$ is more physically interesting.  
+
+I get errors when defining the so-called \verb|FacetNormal| for this mesh.  I'll look further into it, why this mesh with cells of tetrahedron doesn't have facets.  
+
+However, one could simply consider 
+\[
+\langle u, \sigma^{ij}g_{jk}u^k \frac{\partial}{ \partial x^i} \rangle
+\]
+the inner product of the displacement $u$ (which is a vector field) to what had already been the inner product of the displacement $u$ with stress tensor $\sigma$, to get the \emph{pressure} in the direction of the displacement $u$, due to the displacement $u$.  That $\sigma$ has units of pressure (Pascal) is clear from the units of $\mu$.  
+
+The plotting of this is implemented by 
+\begin{lstlisting}
+sigma_f = 2*mu*sym(grad(u)) + lmbda*tr(grad(u))*Identity(3)
+T_f = sigma_f*u
+T_f_u = inner( T_f, u)
+
+plot( T_f_u/norm(u)**2, interactive=True)
+\end{lstlisting}
+Note that \verb|u| was declared again as a function on function space $V$.  
+
+Note that one could also consider 
+\[
+\sigma^{ij}g_{jk}u^k \frac{ \partial }{ \partial x^i}
+\]
+and plot those vector values over the mesh.  
+
+From looking at the plot of 
+\[
+\sigma(u,u)/ \|u\|^2 = \sigma^{ij} g_{ik} g_{jl} u^k u^l / \| u \|^2
+\]
+I obtain a maximum value near the ends of about $3.10$ pascals.  
+
+From looking at the plot of 
+\[
+\sigma(u,u) = \sigma^{ij} g_{ik} g_{jl} u^k u^l 
+\]
+I get about $3.10 \times 10^{-8}$ N at its maximum at points near the ends of the beam.  
+
+I increased the acceleration to $3g$, and, from looking at a plot of $\sigma(u,u)/\|u\|^2$, obtained a maximum value near the ends of about $7.0$ pascals.  From a plot of $\sigma(u,u)$, I get about $10^{-7}$ N for the force, due to stress tensor in the direction of the displacement $u$, due to displacement $u$, maximum, near the ends of the beam.  
+
+
+
+\subsubsection{On Flow theory of plasticity}
+
+cf. 26.3.2. Flow theory of plasticity, 26.3. ``Flow Theory of plasticity'' of the FEniCS book (2011) \cite{FEniCS}.  
+
+\O lgaard and Well (2008) references Lubliner (2008)
+
+geometrically, linear plasticity is $\sigma^{ij} = C^{ijkl} \epsilon^e_{kl}$.  $\epsilon^e \in \Gamma(\otimes^2 T^*N)$ elastic part of strain tensor.  
+
+Assume $\epsilon = \epsilon^e + \epsilon^P$
+
+\[
+f(\sigma, \epsilon^P, \kappa) := \phi(\sigma, q_{\text{kin}}(\epsilon^P)) - q_{\text{iso}}(\kappa) - \sigma_y \leq 0
+\]
+with
+
+$\phi(\sigma,q_{\text{kin}}(\epsilon^P))$ scalar effective stress measure \\
+$q_{\text{kin}}$ stress-like internal variable, to model kinematic hardening \\
+$q_{\text{iso}}$ scalar stress-like term used to model isotropic hardening \\
+$\kappa$ scalar internal variable \\
+$\sigma_y$ initial scalar yield stress 
+
+For von Mises (i.e. $J_2$-flow) model, with linear isotropic hardening $\phi$, $q_{\text{iso}}$ 
+\[
+\begin{aligned}
+  & \phi(\sigma) = \sqrt{ \frac{3}{2} s_{ij} s_{ij} } \\  
+  & q_{\text{iso}}(\kappa) = H\kappa
+\end{aligned}
+\]
+where $s_{ij} = \sigma_{ij} - \sigma_{kk} \delta_{ij}/3$ is deviatoric stress.  \\
+\phantom{where } $H$ constant scalar $H >0$
+
+EY : 20150805 Then 
+\[
+f(\sigma, \epsilon^P,\kappa ) = \sqrt{ \frac{3}{2} ( \sigma^{ij} - \sigma^{kk} \frac{ \delta^{ij}}{3} )( \sigma_{ij} - \sigma^{kk} \frac{ \delta_{ij} }{3} ) } - H\kappa - \sigma_y \leq 0 
+\]
+
+In flow theory of plasticity, \\
+\phantom{In} plastic strain rate $\dot{\epsilon}^P = \dot{\lambda} \frac{ \partial g}{ \partial \sigma}$ \\
+\phantom{In } where $\dot{\lambda} = $ rate of plastic multiplier 
+
+$g\in C^{\infty}(N)$ plastic potential \\
+in associative plastic flow $g=f$.  
+
+For isotropic strain-hardening, $\dot{\kappa} = \sqrt{ \frac{2}{3} \dot{\epsilon}^P_{ij} \dot{\epsilon}^P_{ij} }$  
+
+For associative von Mises plasticity, $\dot{\kappa} = \sqrt{ \frac{2}{3} \dot{\lambda}^2 \frac{ \partial g}{ \partial \sigma^{ij}} \frac{ \partial g}{ \partial \sigma^{ij} } } = \dot{\lambda}^2 \sqrt{ \frac{2}{3} \frac{ \partial g}{ \partial \sigma^{ij}} \frac{ \partial g}{ \partial \sigma^{ij}}}$
+
+EY : 20150805 I don't understand why 
+\[
+\dot{\kappa} = \dot{\lambda}
+\]
+(cf. FEniCS book (2011) \cite{FEniCS}) please contact me to see how this was worked out.  
+
+\hrulefill
+
+
+
+Since $\Psi_0$ manifestly covariant,
+\[
+\Psi_0 = \frac{\lambda}{2} (E_{kk})^2 + \mu E^{ij} E_{ij}
+\]
+This is a powerful statement, as $\epsilon$ and $E$ are related by a diffeomorphism, then they are diffeomorphically equivalent, and so manifestly covariant relations such as $\Psi_0$ must remain so under diffeomorphisms.
+
+Compressible neo-Hookean model (an example of hyperelasticity):
+
+\begin{equation}
+  \Psi_0 = \frac{\mu}{2} ( I_C - 3) - \mu \ln{J} + \frac{\lambda}{2} (\ln{J})^2
+\end{equation}
+where $I_C = \text{tr}C$ and $J = \text{det}F$, cf. Eq. (26.33) \cite{FEniCS}, i.e. 
+\[
+\Psi_0 = \frac{\mu}{2} ( \text{tr}\Phi^*g' - \text{dim}M) - \mu \ln{ \text{det}D\Phi} + \frac{\lambda}{2} (\ln{\text{det}D\Phi})^2
+\]
+
+UFL, Unified Form Language (Chapter 17 \cite{FEniCS} permit problems to be posed as energy minimization problems, and \emph{it won't be necessary} to compute an expression for a stress tensor, nor its linearization.  
+
+\subsubsection{Time integration}
+
+cf. 26.4 Time integration \cite{FEniCS}
+
+Newmark methods - direct integration method, in which the equations are evaluated at discrete points in time separated by a time increment $\Delta t$.  
+
+But it's straightforward to extend to generalized $\alpha$-methods.
+
+For \\
+$u_n$ displacement at $t_n$ \\
+$\dot{u}_n$ velocity at $t_n$ \\
+$\ddot{u}_n$ acceleration at $t_n$
+
+\[
+\begin{aligned}
+  & u_{n+1} = u_n + \Delta t \dot{u}_n + \frac{1}{2} \Delta t^2 (2\beta \ddot{u}_{n+1} + (1-2\beta) \ddot{u}_{n+1}) \\ 
+  & \dot{u}_{n+1} = \dot{u}_n + \Delta t ( \gamma \ddot{u}_{n+1} + (1- \gamma) \ddot{u}_n)
+\end{aligned}
+\]
+
+Then ``to solve a time dependent problem'' \cite{FEniCS}, \\
+pose a governing equation at $t_{n+1}$ 
+\[
+F(u_{n+1}, w) = 0 \quad \, \forall \, w \in V
+\]
+
+
+\subsection{FEniCS examples involving structural mechanics, solid mechanics}
+
+\quad \\
+\small{
+\verb|/Applications/FEniCS.app/Contents/Resources/share/dolfin/demo/documented/hyperelasticity/python/demo_hyperelasticity.py| \\
+\verb|/Applications/FEniCS.app/Contents/Resources/share/dolfin/demo/undocumented/elasticity/python/demo_elasticity.py| \\
+\verb|/Applications/FEniCS.app/Contents/Resources/share/dolfin/demo/undocumented/elastodynamics/python/demo_elastodynamics.py| 
+} \\
+
+
+\section{Paraview}
+
+After obtaining a \verb|.pvd| and \verb|.vtu| (vtk UnstructuredGrid), to view it, I use Paraview.  Downloading and installing on a Mac OS X is easy as a binary (double-click and move and drag into the Applications Folder) \footnote{Download, \emph{Paraview}, \url{http://www.paraview.org/download/}}.  \\
+20150801 I don't know how to do it in FEniCS and dolfin, from Python, itself; please let me know how to do the ``In'' part of File I/O of FEniCS.  
+
+\section{MeshPY}
+
+I'll try to use MeshPy to create meshes.
+
+\section{My Examples}
+
+
+
+\subsection{hyperelasticity02.py}
+
+\verb|hyperelasticity02.py| is based on the (documented) demo file \verb|demo_hyperelasticity.py| in \verb|/Applications/FEniCS.app/Contents/Resources/share/dolfin/demo/documented/hyperelasticity/python|
+
+$3.7 $ meters if the diameter of Falcon 9.\footnote{Falcon 9, \emph{SpaceX}, \url{http://www.spacex.com/falcon9}}  I'm just going to guess that the steel strut beam is 2 meters long.  I'm going to guess that the cross section is a square of width $0.1$ meters.  
+
+\verb|VectorFunctionSpace| cf. \url{http://fenicsproject.org/documentation/dolfin/dev/python/programmers-reference/functions/functionspace/VectorFunctionSpace.html}
+
+For vector space $V$, \verb|VectorFunctionSpace| $\ni f: D \subset M \to V$.  
+
+I used CompiledSubDomain to define the boundaries, but I want to keep in mind this page, making subclasses of SubDomain, \href{http://fenicsproject.org/documentation/dolfin/dev/python/demo/pde/subdomains-poisson/python/documentation.html}{21. Poisson equation with multiple subdomains}.  
+
+\subsubsection{DirichletBC}
+
+EY : 20150802 \verb|DirichletBC| is the Dirichlet boundary condition and I need help and feedback on what kinds of (Dirichlet) boundary conditions a steel beam or steel or whatever the metal is (stainless steel, Inconel?); would it have to deal with how the beam or strut is bolted (and is a strut a beam?)?  
+
+Comparing the code (left) with what we've talked about before (right), 
+\[
+\begin{aligned}
+& d = \verb|u.geometric_dimension()| \\
+& I = \text{Identity}(d) \\
+& F = I + \text{grad}(u) \quad \, \text{Deformation gradient} \\
+& C= F^T \cdot F
+\end{aligned}
+\quad \quad \quad \,
+\begin{aligned}
+& d = \text{dim}\Omega_0 \\ 
+& 1_B \\ 
+& D\Phi \simeq \delta^i_{\,\,j} + \frac{\partial u^i}{ \partial a^j}(a) \\
+& C:= \Phi^* g'
+\end{aligned}
+\]
+
+$E$, $\nu$, $\lambda$, $\mu$ are the Young's modulus, Poisson's ratio, Lam\'e first parameter, and Lam\'e second parameter or sheer modulus, as given in Definitions \ref{Def:Youngsmodulus}, \ref{Def:Poissonsratio}, \ref{Def:Lame1stparameter}, \ref{Def:Lamesheermodulus}.  
+
+Units: $[\nu]=1$ (dimensionless), $[E],[\mu],[\nu]= \text{GPa}$ (GigaPascal)
+
+
+Stored strain energy density (for the compressible neo-Hookian model), denoted $\psi$, is as before:
+\[
+\psi = \frac{\mu}{2}( \text{tr}(C) -3) - \mu \ln{(J)} + \frac{\lambda}{2}(\ln{J})^2
+\]
+where $J = \text{det}(F)$, which is $D\Phi$, the pushforward of the diffeomorphism (deformation) $\Phi$. \\ 
+$[\psi] = [\mu] = \text{GPa}$
+
+For $dx$, an instance of \verb|Measure|, with domain everywhere on $M$, a ``cell'', and $ds$, the measure of an ``exterior facet'', the total potential energy $\Pi$, given in both ways, along with other quantities, are 
+\[
+\begin{aligned}
+  & \Pi = \psi dx - (B\cdot u) dx - (T\cdot u) ds  \\
+& F = \nabla_v \Pi(u) \\
+& J = (\nabla_{du}F)(u) =\frac{ \partial^i F}{ \partial u^j}(u)
+\end{aligned} \quad \quad \quad \, 
+\begin{aligned}
+& \mathcal{U} = \psi dV - B^i u_i dV - T^i u_i dS \\ 
+& F = \nabla_v \mathcal{U}(u) \\ 
+& J_F =\frac{ \partial^i F}{ \partial u^j}(u)
+\end{aligned}
+\]
+
+$[\Pi] = (N/m^2) *m^3 = N*m = J$, Joules.  
+
+Consider a maximum load of $10,000 \, lb.$ which I'll take to be $44482.22 \, N$.  The volume of the steel beam is $0.1*0.1*2.0 = 0.02 \, m^3$.  $[B] = N/m^2$.  Then take $B = 0.2224111*10^6 \, N/m^2$, with the ``longitudinal'' surface being $2.0*0.1 = 0.2 \, m^2$.    
+
+For ``traction'' $T$, $[T]= N/m$.  I'll take the traction to be the maximum stress \emph{considered} (on the chart's axis) in the welding by gas tungsten-arc process for Inconel alloy X-750, which is 220 \, ksi, or 1516.9 MPa \footnote{\url{http://www.specialmetals.com/documents/Inconel alloy X-750.pdf}}.  Taking the 0.1 \, m width, then $T = 1516.9*10^6 * 0.1 = 1.5169 * 10^8 \, N/m$.   
+
+\subsubsection{Dirichlet boundary conditions}
+
+Given a partial differential equation (PDE), $\nabla^2 y + y = 0 = F(x,y,\nabla^2 y)$, the Dirichlet boundary condition is $y(x) = f(x)$ \, \, $\forall \, x \in \partial \Omega$ \footnote{``Dirichlet boundary condition'', wikipedia, \url{https://en.wikipedia.org/wiki/Dirichlet_boundary_condition}}.  From wikipedia, in mechanical engineering, the Dirichlet boundary condition applies to the end(s) of the beam that's ``held at a fixed position in space.''  
+
+
+\subsection{demo elastodynamics.py and elastodynamics 01.py}
+
+\verb|demo_elastodynamics.py|
+
+\verb|demo_elastodynamics.py| is an undocumented demo found in 
+
+\verb|/Applications/FEniCS.app/Contents/Resources/share/dolfin/demo/undocumented/elastodynamics/python|.  
+
+I'll go ahead and document it, and further (try to) modify it.
+
+It appears to follow Chapter 27 ``A Computational framework for nonlinear elasticity'' by Harish Narayanan \cite{FEniCS}, which I'll review here.
+
+\subsubsection{On ``A computational framework for nonlinear elasticity''}
+
+Noting ``disallowing interpenetration of matter or formation of cracks.''  \\
+
+(deformation) diffeomorphism $\Phi: \Omega_0 \times [0,T] \to N$ \\
+In Narayanan's notation, $\begin{aligned}
+  & \quad \\
+   \varphi: & \overline{\Omega}\times [0,T] \to \mathbb{R}^{2,3} \\
+  & \overline{\Omega} := \overline{ \Omega \bigcup \partial \Omega } \end{aligned}$
+
+Construct $\forall \, a \in \Omega_0$, $u(a,t) = \Phi(a,t) - a \in \mathbb{R}^{\text{dim}N}$; $\text{dim}N = \text{dim}\Omega_0$.  
+
+Subject body $\Omega_0$ to \\
+body forces, $B(a,t)$ \\
+traction forces, $T(a,t)  \in \mathfrak{X}(N$, forces per unit surface area, acting on Neumann boundary of body $\partial \Omega_N$ \\
+displacement boundary conditions; Dirichlet boundary on $\partial \Omega_D$.  
+
+$\partial \Omega_N \bigcap \partial \Omega_D = \emptyset$, $\overline{ \partial \Omega_N \bigcup \partial \Omega_D} =\partial \Omega$
+
+From cf. 27.1.2. The basic equation we need to solve \cite{FEniCS}, 
+\[
+\rho \frac{ \partial^2 u}{ \partial t^2} = \text{div}(P) + B \text{ on } \Omega_0
+\]
+$\rho \in C^{\infty}(\Omega_0)$ \\
+first Piola-Kirchhoff stress tensor $P$.  
+
+\subsubsection{Exporting animations into ParaView}
+
+This useful Question and Answer helped with explaining how to export the animation into ParaView cf. \href{http://fenicsproject.org/qa/7390/how-to-make-a-video-of-a-sequence-of-fem-functions}{How to make a video of a sequence of FEM functions?}.  Essentially, you would take \verb|elasticity.pvd|, which references all the time steps/slices of data, and open it up in Paraview.  You would also need to Apply in Paraview, ``WarpByVector'' to see the actual deformation.  
+
+\href{https://www.youtube.com/watch?v=NFnw1AGoh_s}{[ParaView] Basics of Keyframe Animation} from UM3DLab's YouTube channel was also useful as a tutorial.  
+
+
+\part{Dictionary}
+
+In this part, entitled ``Dictionary,'' I have further entries for a ``dictionary'' between the laws of physics and its application in engineering.  
+
+\section{Curl}
+
+James T. Wheeler had worked out explicitly how the Levi-Civita connection is related to the curl \footnote{James T. Wheeler, \href{http://www.physics.usu.edu/Wheeler/ClassicalMechanics/CMDifferentialForms.pdf}{Differential Forms}, which is (the last) part of his bigger book for (classical) mechanics \href{http://www.physics.usu.edu/Wheeler/ClassicalMechanics/MechanicsBookFall2014.pdf}{Mechanics}, \url{http://www.physics.usu.edu/Wheeler/ClassicalMechanics/MechanicsBookFall2014.pdf}}
+
+\begin{equation}
+  *dv = \frac{ \sqrt{g}}{ (n-2)!} ((\nabla_i v)^{\flat}_j ) \epsilon^{ij}_{ \,\, j_3 \dots j_n} dx^{j_3} \wedge \dots \wedge dx^{j_n} = (\text{curl}v) \in \Omega^{n-2}(M)
+\end{equation}
+
+Indeed, if $n=3$, $\Gamma^m_{il} = 0$, $g_{jm} = \delta_{jm}$, 
+\[
+\begin{gathered}
+  * dv = \frac{ \partial v^j}{ \partial x^i } \epsilon^{ij}_{ \,\, j_3} dx^{j_3} = \left( \frac{ \partial v^j}{ \partial x^i} - \frac{ \partial v^i}{ \partial x^j} \right) dx^{j_3} 
+\end{gathered}
+\]
+while, from ``vector analysis''
+\[
+\begin{gathered}
+  (\nabla \times v)_k = \epsilon_{ijk} \frac{ \partial v^j}{ \partial x^i} \frac{ \partial }{ \partial x^k} = \left( \frac{ \partial v^j}{ \partial x^i} - \frac{ \partial v^i}{ \partial x^j} \right) \frac{ \partial }{ \partial x^k}
+\end{gathered}
+\]
+
+\section{Strain}
+
+What's called $u$ in Landau and Lifshitz \cite{LLandauELifshitz1970} and here is $\epsilon$ in a number of engineering texts \cite{PLagace2002}, \cite{RRadovitzky2003}.  
+\[
+\begin{gathered}
+\begin{aligned} 
+& (U,a^i) \in \mathcal{A} \text{ of } (M,\mathcal{O},\mathcal{A},g)  \\
+  & u \in \Gamma(T^*M \otimes T^*M) \\
+  & u = u_{ij} da^i \otimes da^j \\ 
+  & u_{ij} = \frac{1}{2} ( g_{kj} \frac{ \partial u^k}{ \partial a^i} + g_{ik} \frac{ \partial u^k}{ \partial a^j} + u^k \frac{ \partial g_{ij}}{ \partial a^k} ) \end{aligned} \quad \quad \quad \, 
+\begin{aligned}
+& (U,X^i) \in \mathcal{A} \text{ of } (M,\mathcal{O},\mathcal{A},g)  \\
+  & \epsilon \in \Gamma(T^*M \otimes T^*M) \\
+  & \epsilon = \epsilon_{ij} dX^i \otimes dX^j \\ 
+  & \epsilon_{ij} = \frac{1}{2} ( g_{kj} \frac{ \partial u^k}{ \partial X^i} + g_{ik} \frac{ \partial u^k}{ \partial X^j} + u^k \frac{ \partial g_{ij}}{ \partial X^k} ) 
+\end{aligned} 
+\end{gathered}
+\]
+If $g_{kj} = \delta_{kj}$, 
+\[
+\begin{gathered}
+  u_{ij} = \frac{1}{2} \left( \frac{ \partial u^j}{ \partial a^i} + \frac{ \partial u^i}{ \partial a^j} \right)
+\quad \quad \quad \,   \epsilon_{ij} = \frac{1}{2} \left( \frac{ \partial u^j}{ \partial X^i} + \frac{ \partial u^i}{ \partial X^j} \right)
+\end{gathered}
+\]
+
+\section{Stress}
+
+What I denote as the Cauchy stress tensor $T$ is usually denoted with $\sigma$ in engineering \cite{PLagace2002}, \cite{RRadovitzky2003}:
+
+\[
+\begin{gathered}
+  \begin{aligned}
+    & (U,x^i) \in \mathcal{A} \text{ of } (N, \mathcal{O}, \mathcal{A},g')
+    & T \in \Gamma(TN \otimes TN) \\ 
+    & T= T^{ij} e_j\otimes e_i
+\end{aligned} \quad \quad \quad \, 
+  \begin{aligned}
+    & (U,x^i) \in \mathcal{A} \text{ of } (N, \mathcal{O}, \mathcal{A},g')
+    & \sigma \in \Gamma(TN \otimes TN) \\ 
+    & \sigma= \sigma^{ij} e_j\otimes e_i
+\end{aligned}
+\end{gathered}
+\]
+
+
+
+\end{multicols*}
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{LLandauELifshitz1970}
+L. D. Landau, E.M. Lifshitz, \textbf{Theory of Elasticity}, Second Edition: Volume 7 (Course of Theoretical Physics), Pergamon Press, 1970.  
+
+
+
+\bibitem{TFrankel2004}
+T. Frankel,
+\textbf{The Geometry of Physics}, 
+Cambridge University Press, 
+Second Edition,
+2004.
+
+\bibitem{SMorita2001}
+Shigeyuki Morita, \textbf{Geometry of Differential Forms} (Translations of Mathematical Monographs, Vol. 201)  2001
+
+
+\bibitem{PLagace2002}
+Paul Lagace. 16.20 Structural Mechanics, Fall 2002. (Massachusetts Institute of Technology: MIT OpenCourseWare), \url{http://ocw.mit.edu} (Accessed 23 Jul, 2015). License: Creative Commons BY-NC-SA \url{http://ocw.mit.edu/courses/aeronautics-and-astronautics/16-20-structural-mechanics-fall-2002/}
+
+\bibitem{RRadovitzky2003}
+Ra\'ul Radovitzky. \emph{16.225 Computational Mechanics of Materials, Fall 2003}. (Massachusetts Institute of Technology: MIT OpenCourseWare), \url{http://ocw.mit.edu} (Accessed 27 Jul, 2015). License: Creative Commons BY-NC-SA \url{http://ocw.mit.edu/courses/aeronautics-and-astronautics/16-225-computational-mechanics-of-materials-fall-2003/#}
+
+\bibitem{JLee2012}
+John Lee, \textbf{Introduction to Smooth Manifolds} (Graduate Texts in Mathematics, Vol. 218), 2nd edition, Springer,  2012, ISBN-13: 978-1441999818
+
+
+\bibitem{EYeung2012}
+Ernest Yeung, ``Solutions To Introduction To Smooth Manifolds by John M. Lee, 2012, Springer,'' 2012
+
+\bibitem{DHolmTSchmahCStoica2009}
+Darryl D. Holm, Tanya Schmah, Cristina Stoica, \textbf{Geometric Mechanics and Symmetry: From Finite to Infinite Dimensions} (Oxford Texts in Applied and Engineering Mathematics) 2009,  ISBN-13: 978-0199212903  ISBN-10: 0199212902  
+
+\bibitem{TKambe2009}
+Tsutomu Kambe, \textbf{Geometrical Theory of Dynamical Systems and Fluid Flows}, Advanced Series in Nonlinear Dynamics: Volume 23, 2009, \url{http://www.worldscientific.com/worldscibooks/10.1142/7418} ISBN: 978-981-4282-24-6 (hardcover)
+
+
+\bibitem{JMarsdenTHughes1994}
+Jerrold E. Marsden, Thomas J. R. Hughes, \textbf{Mathematical Foundations of Elasticity} (Dover Civil and Mechanical Engineering), Dover Publications, 1994 \emph{Available at the late Prof. Marsden's website}: \url{http://authors.library.caltech.edu/25074/1/Mathematical_Foundations_of_Elasticity.pdf} 
+
+\bibitem{FEniCS}
+A. Logg, K.-A. Mardal, G. N. Wells et al. (2012). \emph{Automated Solution of Differential Equations by the Finite Element Method}, Springer. [\href{http://dx.doi.org/10.1007/978-3-642-23099-8}{doi:10.1007/978-3-642-23099-8}] \url{http://launchpad.net/fenics-book/trunk/final/+download/fenics-book-2011-10-27-final.pdf}
+
+\end{thebibliography}
+
+There is a Third Edition of T. Frankel's \textbf{The Geometry of Physics} \cite{TFrankel2004} and a third edition of Landau and Lifshitz's \textbf{Theory of Elasticity} \cite{LLandauELifshitz1970}, but I don't have the funds to purchase the book (about \$ 71 US dollars, with sales tax, ahd \$ 66 USD for the latter). It would be nice to have the hardcopy text to see new updates and to use for research, as the second edition allowed me to formulate fluid mechanics and elasticity in a covariant manner.  Please help me out and donate at \url{ernestyalumni.tilt.com}.  
+
+
+
+\end{document}
